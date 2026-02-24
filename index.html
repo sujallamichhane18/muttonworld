@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Khulasa.press — नेपाली कांग्रेस जवाफदेही अभिलेख</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
 <style>
 /* ════════════════════════════════════════════
    RESET & TOKENS
@@ -21,10 +22,8 @@
   --ink-4:      #97918A;
   --red:        #C4131A;
   --red-dark:   #8B0D12;
-  --red-pale:   rgba(196,19,26,0.06);
+  --red-pale:   rgba(196,19,26,0.07);
   --red-mid:    rgba(196,19,26,0.18);
-  --green:      #1A6B3A;
-  --amber:      #8A5E00;
   --rule:       #DEDAD3;
   --rule-2:     #C6C0B8;
   --f-head: 'Playfair Display', Georgia, serif;
@@ -49,16 +48,6 @@ a { color: inherit; text-decoration: none; }
 ::-webkit-scrollbar-thumb { background: var(--red); }
 
 /* ════════════════════════════════════════════
-   SVG ICON SYSTEM
-════════════════════════════════════════════ */
-.icon {
-  display: inline-block;
-  vertical-align: middle;
-  flex-shrink: 0;
-}
-.icon svg { display: block; }
-
-/* ════════════════════════════════════════════
    LANGUAGE PICKER MODAL
 ════════════════════════════════════════════ */
 #lang-overlay {
@@ -78,25 +67,23 @@ a { color: inherit; text-decoration: none; }
   visibility: hidden;
   pointer-events: none;
 }
-.lo-emblem {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 10px;
-}
-.lo-pulse {
-  width: 14px; height: 14px;
-  background: var(--red);
-  border-radius: 50%;
-  animation: pls 2s ease-in-out infinite;
-  flex-shrink: 0;
-}
 .lo-brand {
   font-family: var(--f-head);
   font-size: clamp(28px, 5vw, 52px);
   font-weight: 900;
   color: #fff;
   letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.lo-brand .rb {
+  display: inline-block;
+  width: 12px; height: 12px;
+  background: var(--red);
+  border-radius: 50%;
+  animation: pls 2s ease-in-out infinite;
 }
 .lo-sub {
   font-family: var(--f-mono);
@@ -106,8 +93,6 @@ a { color: inherit; text-decoration: none; }
   color: rgba(255,255,255,0.35);
   margin-bottom: 56px;
   text-align: center;
-  max-width: 500px;
-  line-height: 2;
 }
 .lo-prompt {
   font-family: var(--f-mono);
@@ -117,14 +102,10 @@ a { color: inherit; text-decoration: none; }
   color: rgba(255,255,255,0.45);
   margin-bottom: 20px;
   text-align: center;
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 .lo-btns {
   display: flex;
   gap: 16px;
-  align-items: center;
 }
 .lo-btn {
   font-family: var(--f-head);
@@ -137,9 +118,6 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.01em;
   background: transparent;
   outline: none;
-  display: flex;
-  align-items: center;
-  gap: 12px;
 }
 .lo-btn.en {
   border-color: rgba(255,255,255,0.25);
@@ -159,6 +137,8 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--f-mono);
   font-size: 10px;
   color: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
   letter-spacing: 0.1em;
 }
 .lo-note {
@@ -169,9 +149,15 @@ a { color: inherit; text-decoration: none; }
   color: rgba(255,255,255,0.18);
   text-transform: uppercase;
   text-align: center;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+}
+.lo-goat-hint {
+  margin-top: 10px;
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(196,19,26,0.5);
+  text-transform: uppercase;
+  text-align: center;
 }
 
 @keyframes pls {
@@ -180,7 +166,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ════════════════════════════════════════════
-   SITE WRAPPER
+   SITE WRAPPER — hidden until lang chosen
 ════════════════════════════════════════════ */
 #site-wrap {
   opacity: 0;
@@ -193,7 +179,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ════════════════════════════════════════════
-   LANGUAGE TOGGLE
+   LANGUAGE TOGGLE (top right)
 ════════════════════════════════════════════ */
 #lang-toggle {
   font-family: var(--f-mono);
@@ -203,13 +189,10 @@ a { color: inherit; text-decoration: none; }
   background: transparent;
   border: 1px solid var(--rule-2);
   color: var(--ink-3);
-  padding: 5px 12px;
+  padding: 4px 10px;
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s;
   outline: none;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 #lang-toggle:hover { border-color: var(--red); color: var(--red); }
 
@@ -239,21 +222,21 @@ a { color: inherit; text-decoration: none; }
   color: #fff;
   white-space: nowrap;
   flex-shrink: 0;
-  gap: 8px;
+  gap: 7px;
 }
-.tk-live-dot {
-  width: 6px; height: 6px;
+.tk-label::before {
+  content: '';
+  width: 5px; height: 5px;
   background: #fff;
   border-radius: 50%;
   display: block;
   animation: bl 1.3s ease infinite;
-  flex-shrink: 0;
 }
 @keyframes bl { 0%,100%{opacity:1} 50%{opacity:0.25} }
 .tk-scroll-wrap { flex: 1; overflow: hidden; }
 .tk-scroll {
   display: inline-flex;
-  animation: mq 80s linear infinite;
+  animation: mq 70s linear infinite;
   white-space: nowrap;
   align-items: center;
 }
@@ -294,7 +277,7 @@ a { color: inherit; text-decoration: none; }
   gap: 11px;
   letter-spacing: -0.01em;
 }
-.mh-logo-dot {
+.mh-logo .dot {
   width: 10px; height: 10px;
   background: var(--red);
   border-radius: 50%;
@@ -316,9 +299,6 @@ a { color: inherit; text-decoration: none; }
   padding-bottom: 2px;
   border-bottom: 1px solid transparent;
   transition: color .2s, border-color .2s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 .mh-nav a:hover { color: var(--red); border-bottom-color: var(--red); }
 .mh-right {
@@ -331,9 +311,6 @@ a { color: inherit; text-decoration: none; }
   font-size: 9.5px;
   color: var(--ink-4);
   letter-spacing: 0.08em;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 /* ════════════════════════════════════════════
@@ -357,13 +334,10 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--red);
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 .hero-grid {
   display: grid;
-  grid-template-columns: 1fr 430px;
+  grid-template-columns: 1fr 410px;
   gap: 60px;
   align-items: start;
 }
@@ -403,17 +377,22 @@ a { color: inherit; text-decoration: none; }
   color: rgba(255,255,255,0.55);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+}
+.sp-head::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--red);
+  border-radius: 50%;
+  display: block;
+  flex-shrink: 0;
 }
 .sp-cell {
-  padding: 18px 20px;
+  padding: 20px 20px;
   border-bottom: 1px solid var(--rule);
   position: relative;
   transition: background 0.18s;
   cursor: default;
-  display: flex;
-  align-items: center;
-  gap: 16px;
 }
 .sp-cell:last-child { border-bottom: none; }
 .sp-cell::before {
@@ -427,22 +406,10 @@ a { color: inherit; text-decoration: none; }
 }
 .sp-cell:hover { background: var(--red-pale); }
 .sp-cell:hover::before { transform: scaleY(1); }
-.sp-cell-icon {
-  width: 40px; height: 40px;
-  border: 1.5px solid var(--rule-2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  background: #fff;
-  transition: border-color 0.18s;
-}
-.sp-cell:hover .sp-cell-icon { border-color: var(--red); }
-.sp-cell-data { flex: 1; }
 .sp-n {
   display: block;
   font-family: var(--f-head);
-  font-size: 38px;
+  font-size: 42px;
   font-weight: 900;
   color: var(--red);
   line-height: 1;
@@ -451,11 +418,11 @@ a { color: inherit; text-decoration: none; }
 .sp-l {
   display: block;
   font-family: var(--f-mono);
-  font-size: 9px;
+  font-size: 9.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-3);
-  margin-top: 4px;
+  margin-top: 5px;
   line-height: 1.5;
 }
 
@@ -482,15 +449,12 @@ a { color: inherit; text-decoration: none; }
   flex-shrink: 0;
   border-right: 1px solid rgba(255,255,255,0.28);
   padding-right: 22px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 .ab-wrap { flex: 1; overflow: hidden; }
 .ab-scroll {
   display: inline-flex;
   gap: 52px;
-  animation: mq 50s linear infinite;
+  animation: mq 42s linear infinite;
   white-space: nowrap;
   align-items: center;
 }
@@ -526,9 +490,6 @@ a { color: inherit; text-decoration: none; }
   padding: 5px 11px;
   border: 1px solid;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 .b-red  { border-color: var(--red); color: var(--red); background: var(--red-pale); }
 .b-ink  { border-color: var(--ink); color: var(--ink); }
@@ -572,9 +533,6 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase;
   padding: 3px 9px;
   border: 1px solid;
-  display: flex;
-  align-items: center;
-  gap: 5px;
 }
 .t-red   { border-color: var(--red); color: var(--red); background: var(--red-pale); }
 .t-ink   { border-color: var(--rule-2); color: var(--ink-3); background: #fff; }
@@ -589,9 +547,10 @@ a { color: inherit; text-decoration: none; }
   padding: 5px 12px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   transition: color 0.2s, border-color 0.2s;
 }
+.cc-src-btn::after { content: '\2197'; }
 .cc-src-btn:hover { color: var(--red); border-color: var(--red); }
 
 /* Document panel */
@@ -606,7 +565,7 @@ a { color: inherit; text-decoration: none; }
   background: #fff;
   border: 1px solid var(--rule-2);
   border-left: 4px solid var(--red);
-  max-width: 660px;
+  max-width: 640px;
   width: 100%;
   padding: 22px 26px;
 }
@@ -619,12 +578,19 @@ a { color: inherit; text-decoration: none; }
   border-bottom: 1px solid var(--rule);
 }
 .ev-stamp {
-  width: 52px; height: 52px;
+  width: 46px; height: 46px;
   border: 2px solid var(--red);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--red);
+  text-align: center;
+  line-height: 1.2;
   flex-shrink: 0;
+  letter-spacing: 0.04em;
 }
 .ev-meta { flex: 1; }
 .ev-title {
@@ -663,35 +629,16 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.2;
   margin-bottom: 5px;
 }
-.cc-who {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  color: var(--red);
-  letter-spacing: 0.06em;
-  margin-bottom: 3px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-.cc-date {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  color: var(--ink-4);
-  letter-spacing: 0.05em;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
+.cc-who { font-family: var(--f-mono); font-size: 10px; color: var(--red); letter-spacing: 0.06em; margin-bottom: 3px; font-weight: 700; }
+.cc-date { font-family: var(--f-mono); font-size: 10px; color: var(--ink-4); letter-spacing: 0.05em; margin-bottom: 20px; }
 
 .stat-inline {
   display: inline-flex;
   align-items: baseline;
-  gap: 14px;
+  gap: 12px;
   background: var(--red-pale);
   border-left: 3px solid var(--red);
-  padding: 14px 20px;
+  padding: 13px 18px;
   margin: 2px 0 20px;
 }
 .si-n {
@@ -732,18 +679,19 @@ a { color: inherit; text-decoration: none; }
   flex-wrap: wrap;
   gap: 10px;
 }
-.cf-src { font-family: var(--f-mono); font-size: 9.5px; color: var(--ink-4); letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; }
+.cf-src { font-family: var(--f-mono); font-size: 9.5px; color: var(--ink-4); letter-spacing: 0.05em; }
 .cf-link {
   font-family: var(--f-mono);
   font-size: 9.5px;
   color: var(--red-dark);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   transition: color 0.2s;
   border-bottom: 1px solid transparent;
   padding-bottom: 1px;
 }
+.cf-link::before { content: '\2197'; }
 .cf-link:hover { color: var(--red); border-bottom-color: var(--red); }
 
 /* ════════════════════════════════════════════
@@ -751,15 +699,22 @@ a { color: inherit; text-decoration: none; }
 ════════════════════════════════════════════ */
 .pullquote {
   position: relative;
-  padding: 38px 48px 38px 60px;
+  padding: 38px 48px;
   margin: 44px 0;
   background: var(--paper);
   border-top: 2px solid var(--red);
   border-bottom: 1px solid var(--rule);
 }
-.pq-icon {
+.pq-mark {
   position: absolute;
-  top: 24px; left: 20px;
+  top: 16px; left: 30px;
+  font-family: var(--f-head);
+  font-size: 110px;
+  font-weight: 900;
+  color: rgba(196,19,26,0.07);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
 }
 .pq-text {
   font-family: var(--f-head);
@@ -781,9 +736,6 @@ a { color: inherit; text-decoration: none; }
   margin-top: 14px;
   position: relative;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 /* ════════════════════════════════════════════
@@ -801,81 +753,42 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
   transition: box-shadow 0.22s, transform 0.22s;
 }
-.sm-card.r  { border-top-color: var(--red); }
-.sm-card.w  { border-top-color: var(--amber); }
-.sm-card.g  { border-top-color: var(--green); }
+.sm-card.r { border-top-color: var(--red); }
+.sm-card.w { border-top-color: #8A5E00; }
 .sm-card:hover { box-shadow: 0 5px 28px rgba(0,0,0,0.09); transform: translateY(-2px); }
-.sm-card-icon {
+.sm-ghost-num {
   position: absolute;
-  top: 18px; right: 18px;
-  opacity: 0.07;
-  transition: opacity 0.22s;
+  top: 12px; right: 18px;
+  font-family: var(--f-head);
+  font-size: 60px;
+  font-weight: 900;
+  color: rgba(19,18,16,0.04);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  pointer-events: none;
 }
-.sm-card:hover .sm-card-icon { opacity: 0.12; }
 .sm-tags  { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 11px; }
 .sm-h4 { font-family: var(--f-head); font-size: 16.5px; font-weight: 700; color: var(--ink); line-height: 1.3; margin-bottom: 5px; }
-.sm-who {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  color: var(--red);
-  letter-spacing: 0.06em;
-  font-weight: 700;
-  margin-bottom: 2px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.sm-date {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  color: var(--ink-4);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
+.sm-who { font-family: var(--f-mono); font-size: 9px; color: var(--red); letter-spacing: 0.06em; font-weight: 700; margin-bottom: 2px; }
+.sm-date { font-family: var(--f-mono); font-size: 9px; color: var(--ink-4); margin-bottom: 12px; }
 .sm-body { font-size: 13.5px; font-weight: 300; line-height: 1.7; color: var(--ink-2); border-top: 1px solid var(--rule); padding-top: 12px; }
 .sm-body strong { color: var(--ink); font-weight: 600; }
 .sm-body em     { color: var(--red); font-style: normal; }
 .sm-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 11px; border-top: 1px solid var(--rule); flex-wrap: wrap; gap: 5px; }
-.sm-src { font-family: var(--f-mono); font-size: 8.5px; color: var(--ink-4); display: flex; align-items: center; gap: 4px; }
+.sm-src { font-family: var(--f-mono); font-size: 8.5px; color: var(--ink-4); }
 .sm-lnk {
   font-family: var(--f-mono);
   font-size: 8.5px;
   color: var(--red-dark);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   transition: color 0.2s;
   border-bottom: 1px solid transparent;
   padding-bottom: 1px;
 }
+.sm-lnk::before { content: '\2197'; }
 .sm-lnk:hover { color: var(--red); border-bottom-color: var(--red); }
-
-/* ════════════════════════════════════════════
-   VERDICT STATUS ROW
-════════════════════════════════════════════ */
-.verdict-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border: 1px solid var(--rule-2);
-  background: #fff;
-  overflow: hidden;
-  margin: 32px 0;
-}
-.vr-cell {
-  padding: 24px;
-  border-right: 1px solid var(--rule);
-  position: relative;
-}
-.vr-cell:last-child { border-right: none; }
-.vr-icon { margin-bottom: 12px; }
-.vr-label { font-family: var(--f-mono); font-size: 8.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 4px; }
-.vr-value { font-family: var(--f-head); font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 4px; }
-.vr-sub { font-family: var(--f-mono); font-size: 9.5px; color: var(--ink-3); line-height: 1.5; }
-.vr-status-red   { border-top: 3px solid var(--red); }
-.vr-status-amber { border-top: 3px solid var(--amber); }
-.vr-status-green { border-top: 3px solid var(--green); }
 
 /* ════════════════════════════════════════════
    TIMELINE
@@ -893,9 +806,10 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   gap: 10px;
 }
+.tl-head::before { content: ''; display: block; width: 7px; height: 7px; background: var(--red); border-radius: 50%; flex-shrink: 0; }
 .tl-item {
   display: grid;
-  grid-template-columns: 155px 1fr;
+  grid-template-columns: 145px 1fr;
   border-bottom: 1px solid var(--rule);
   transition: background 0.18s;
 }
@@ -907,41 +821,13 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   flex-direction: column;
   gap: 8px;
-  align-items: flex-start;
 }
 .tl-yr { font-family: var(--f-mono); font-size: 11px; font-weight: 700; color: var(--red); letter-spacing: 0.07em; }
-.tl-dot-wrap { display: flex; align-items: center; gap: 8px; }
-.tl-dot { width: 9px; height: 9px; border: 1.5px solid var(--red); border-radius: 50%; transition: background 0.18s; flex-shrink: 0; }
+.tl-dot { width: 9px; height: 9px; border: 1.5px solid var(--red); border-radius: 50%; transition: background 0.18s; }
 .tl-item:hover .tl-dot { background: var(--red); }
-.tl-severity {
-  font-family: var(--f-mono);
-  font-size: 7.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 2px 6px;
-  border: 1px solid;
-  margin-top: 2px;
-}
-.sev-high { border-color: var(--red); color: var(--red); background: var(--red-pale); }
-.sev-med  { border-color: var(--amber); color: var(--amber); }
 .tl-right { padding: 18px 26px; }
-.tl-title { font-family: var(--f-head); font-size: 15.5px; font-weight: 700; color: var(--ink); margin-bottom: 5px; line-height: 1.3; }
+.tl-title { font-family: var(--f-head); font-size: 15.5px; font-weight: 700; color: var(--ink); margin-bottom: 4px; line-height: 1.3; }
 .tl-desc { font-size: 13px; font-weight: 300; color: var(--ink-3); line-height: 1.65; }
-.tl-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--f-mono);
-  font-size: 8.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border: 1px solid;
-  padding: 2px 7px;
-  margin-top: 7px;
-}
-.tl-badge.convicted { border-color: var(--red); color: var(--red); background: var(--red-pale); }
-.tl-badge.charged { border-color: var(--amber); color: var(--amber); }
-.tl-badge.acquitted { border-color: var(--ink-4); color: var(--ink-4); }
 
 /* ════════════════════════════════════════════
    DATA BAND
@@ -962,10 +848,6 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
 }
 .db-score { text-align: center; }
-.db-score-wrap {
-  position: relative;
-  display: inline-block;
-}
 .db-num {
   display: block;
   font-family: var(--f-head);
@@ -980,130 +862,23 @@ a { color: inherit; text-decoration: none; }
 .db-right h3 { font-family: var(--f-head); font-size: 27px; font-weight: 900; color: var(--ink); margin-bottom: 11px; line-height: 1.2; }
 .db-right p { font-size: 15px; font-weight: 300; line-height: 1.75; color: var(--ink-2); margin-bottom: 30px; }
 .bars { display: flex; flex-direction: column; gap: 13px; }
-.bar-row { display: grid; grid-template-columns: 205px 1fr 60px; gap: 13px; align-items: center; }
-.bar-l { font-family: var(--f-mono); font-size: 9.5px; color: var(--ink-3); letter-spacing: 0.04em; line-height: 1.3; display: flex; align-items: center; gap: 6px; }
+.bar-row { display: grid; grid-template-columns: 195px 1fr 54px; gap: 13px; align-items: center; }
+.bar-l { font-family: var(--f-mono); font-size: 9.5px; color: var(--ink-3); letter-spacing: 0.04em; line-height: 1.3; }
 .bar-track { height: 4px; background: var(--rule); overflow: hidden; }
 .bar-fill { height: 100%; background: var(--red); transform-origin: left; animation: bf 1.9s cubic-bezier(.16,1,.3,1) both; }
-.bar-fill.low  { background: var(--green); }
-.bar-fill.warm { background: var(--amber); }
+.bar-fill.low  { background: #28784A; }
+.bar-fill.warm { background: #8A6000; }
 @keyframes bf { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .bar-val { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-2); text-align: right; font-weight: 700; }
-
-/* ════════════════════════════════════════════
-   CIAA COMPLAINTS CHART
-════════════════════════════════════════════ */
-.ciaa-chart {
-  border: 1px solid var(--rule-2);
-  background: #fff;
-  padding: 26px;
-  margin-top: 30px;
-}
-.chart-head {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.chart-bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  height: 100px;
-}
-.chart-col { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
-.chart-bar-wrap { width: 100%; display: flex; align-items: flex-end; height: 80px; }
-.chart-bar {
-  width: 100%;
-  background: var(--red);
-  transition: opacity 0.2s;
-  position: relative;
-}
-.chart-bar:hover { opacity: 0.75; }
-.chart-bar-tip {
-  position: absolute;
-  top: -20px; left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--f-mono);
-  font-size: 8px;
-  color: var(--ink);
-  white-space: nowrap;
-  font-weight: 700;
-}
-.chart-yr { font-family: var(--f-mono); font-size: 8px; color: var(--ink-4); letter-spacing: 0.05em; text-align: center; }
 
 /* ════════════════════════════════════════════
    SOURCE CARDS
 ════════════════════════════════════════════ */
 .src-card { background: #fff; border: 1px solid var(--rule-2); border-top: 3px solid var(--ink); padding: 22px; }
-.src-card h4 {
-  font-family: var(--f-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink);
-  margin-bottom: 13px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--rule);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.src-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-.src-list li {
-  font-family: var(--f-mono);
-  font-size: 11px;
-  color: var(--ink-2);
-  padding-left: 16px;
-  position: relative;
-  line-height: 1.5;
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding-left: 0;
-}
-.src-dot { width: 5px; height: 1.5px; background: var(--red); flex-shrink: 0; margin-top: 8px; }
-
-/* ════════════════════════════════════════════
-   KEY FIGURES PANEL
-════════════════════════════════════════════ */
-.figures-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin: 32px 0;
-}
-.figure-card {
-  border: 1px solid var(--rule-2);
-  background: #fff;
-  padding: 22px;
-  border-top: 3px solid var(--red);
-  transition: box-shadow 0.2s, transform 0.2s;
-}
-.figure-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-1px); }
-.fc-role { font-family: var(--f-mono); font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 3px; display: flex; align-items: center; gap: 5px; }
-.fc-name { font-family: var(--f-head); font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.3; margin-bottom: 6px; }
-.fc-charge { font-family: var(--f-mono); font-size: 9.5px; color: var(--red); letter-spacing: 0.05em; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
-.fc-detail { font-size: 13px; font-weight: 300; color: var(--ink-3); line-height: 1.65; border-top: 1px solid var(--rule); padding-top: 10px; }
-.fc-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--f-mono);
-  font-size: 8px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border: 1px solid;
-  padding: 2px 7px;
-  margin-top: 8px;
-}
-.status-charged { border-color: var(--amber); color: var(--amber); }
-.status-convicted { border-color: var(--red); color: var(--red); background: var(--red-pale); }
-.status-investigating { border-color: var(--ink-4); color: var(--ink-4); }
+.src-card h4 { font-family: var(--f-mono); font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); margin-bottom: 13px; padding-bottom: 10px; border-bottom: 1px solid var(--rule); }
+.src-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.src-list li { font-family: var(--f-mono); font-size: 11px; color: var(--ink-2); padding-left: 14px; position: relative; line-height: 1.5; }
+.src-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 1.5px; background: var(--red); }
 
 /* ════════════════════════════════════════════
    DISCLAIMER
@@ -1120,9 +895,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink-3);
 }
 .disclaimer strong {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display: block;
   font-family: var(--f-mono);
   font-size: 8.5px;
   letter-spacing: 0.2em;
@@ -1152,10 +925,33 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   gap: 10px;
 }
-.ft-note { font-family: var(--f-mono); font-size: 9.5px; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; display: flex; align-items: center; gap: 8px; }
-.ft-links { display: flex; gap: 20px; }
-.ft-link { font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.35); transition: color 0.2s; display: flex; align-items: center; gap: 5px; }
-.ft-link:hover { color: rgba(255,255,255,0.7); }
+.ft-brand::before { content: ''; display: block; width: 8px; height: 8px; background: var(--red); border-radius: 50%; flex-shrink: 0; }
+.ft-note { font-family: var(--f-mono); font-size: 9.5px; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; }
+
+/* ════════════════════════════════════════════
+   CLICK POP BURST
+════════════════════════════════════════════ */
+.g-pop {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99998;
+  animation: gpop 0.62s cubic-bezier(.16,1,.3,1) forwards;
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 0.06em;
+  user-select: none;
+  white-space: nowrap;
+  background: #fff;
+  border: 1px solid var(--red);
+  padding: 3px 8px;
+}
+@keyframes gpop {
+  0%   { opacity: 1; transform: translateY(0) scale(0.8); }
+  55%  { opacity: 1; transform: translateY(-44px) scale(1.06); }
+  100% { opacity: 0; transform: translateY(-68px) scale(0.88); }
+}
 
 /* ════════════════════════════════════════════
    SCROLL REVEAL
@@ -1166,10 +962,6 @@ a { color: inherit; text-decoration: none; }
 /* ════════════════════════════════════════════
    RESPONSIVE
 ════════════════════════════════════════════ */
-@media (max-width: 1024px) {
-  .verdict-row { grid-template-columns: 1fr 1fr; }
-  .figures-grid { grid-template-columns: 1fr 1fr; }
-}
 @media (max-width: 960px) {
   .masthead { padding: 0 20px; }
   .mh-nav   { display: none; }
@@ -1182,172 +974,761 @@ a { color: inherit; text-decoration: none; }
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .tl-item { grid-template-columns: 90px 1fr; }
   .bar-row { grid-template-columns: 130px 1fr 42px; }
-  .footer  { padding: 22px 20px; flex-direction: column; align-items: flex-start; }
+  .footer  { padding: 22px 20px; }
   .lo-btns { flex-direction: column; }
   .lo-btn  { padding: 14px 36px; font-size: 18px; }
-  .verdict-row { grid-template-columns: 1fr 1fr; }
-  .figures-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════
-     SVG SPRITE DEFS (hidden)
-═══════════════════════════════════ -->
-<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <!-- Scale of Justice -->
-    <symbol id="ico-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 3v18M8 21h8M6 7H2l3 6c0 1.66 1.34 3 3 3s3-1.34 3-3l3-6H6zM22 7h-4l3 6c0 1.66-1.34 3-3 3s-3-1.34-3-3l3-6h4z"/>
-      <line x1="8" y1="7" x2="16" y2="7"/>
-    </symbol>
-    <!-- Warning Triangle -->
-    <symbol id="ico-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-      <line x1="12" y1="9" x2="12" y2="13"/>
-      <line x1="12" y1="17" x2="12.01" y2="17"/>
-    </symbol>
-    <!-- Gavel -->
-    <symbol id="ico-gavel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M14 13.5L16.5 11a2.828 2.828 0 000-4L13 3.5a2.828 2.828 0 00-4 0l-2.5 2.5L14 13.5z"/>
-      <path d="M13 13l-9 9"/>
-      <path d="M3 21h4"/>
-    </symbol>
-    <!-- Building / Institution -->
-    <symbol id="ico-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="4" y="2" width="16" height="20" rx="1"/>
-      <path d="M9 22V12h6v10M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01"/>
-    </symbol>
-    <!-- Person -->
-    <symbol id="ico-person" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="7" r="4"/>
-      <path d="M4 21c0-4.418 3.582-8 8-8s8 3.582 8 8"/>
-    </symbol>
-    <!-- Calendar -->
-    <symbol id="ico-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="4" width="18" height="18" rx="2"/>
-      <line x1="16" y1="2" x2="16" y2="6"/>
-      <line x1="8" y1="2" x2="8" y2="6"/>
-      <line x1="3" y1="10" x2="21" y2="10"/>
-    </symbol>
-    <!-- File / Document -->
-    <symbol id="ico-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-      <polyline points="14 2 14 8 20 8"/>
-      <line x1="16" y1="13" x2="8" y2="13"/>
-      <line x1="16" y1="17" x2="8" y2="17"/>
-    </symbol>
-    <!-- Money / Cash -->
-    <symbol id="ico-money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2" y="6" width="20" height="12" rx="2"/>
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M6 12h.01M18 12h.01"/>
-    </symbol>
-    <!-- Shield / Protection -->
-    <symbol id="ico-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-    </symbol>
-    <!-- Arrow Up-Right (External link) -->
-    <symbol id="ico-arrow-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M7 17L17 7M17 7H7M17 7v10"/>
-    </symbol>
-    <!-- Globe / World -->
-    <symbol id="ico-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"/>
-      <path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/>
-    </symbol>
-    <!-- Lock / Impunity -->
-    <symbol id="ico-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-      <path d="M7 11V7a5 5 0 0110 0v4"/>
-    </symbol>
-    <!-- Chart -->
-    <symbol id="ico-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="18" y1="20" x2="18" y2="10"/>
-      <line x1="12" y1="20" x2="12" y2="4"/>
-      <line x1="6" y1="20" x2="6" y2="14"/>
-      <line x1="2" y1="20" x2="22" y2="20"/>
-    </symbol>
-    <!-- News / Broadcast -->
-    <symbol id="ico-news" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/>
-      <path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/>
-    </symbol>
-    <!-- Quote mark -->
-    <symbol id="ico-quote" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.038 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H10V18H0Z"/>
-    </symbol>
-    <!-- Verified checkmark -->
-    <symbol id="ico-verified" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="20 6 9 17 4 12"/>
-    </symbol>
-    <!-- Clock / Time -->
-    <symbol id="ico-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"/>
-      <polyline points="12 6 12 12 16 14"/>
-    </symbol>
-    <!-- Users / Group -->
-    <symbol id="ico-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-      <circle cx="9" cy="7" r="4"/>
-      <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-      <path d="M16 3.13a4 4 0 010 7.75"/>
-    </symbol>
-    <!-- Source link dot -->
-    <symbol id="ico-source" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
-      <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
-    </symbol>
-  </defs>
-</svg>
-
-<!-- ═══════════════════════════════════
+<!-- ═══════════════════════════════════════
      LANGUAGE PICKER OVERLAY
-═══════════════════════════════════ -->
+═══════════════════════════════════════ -->
 <div id="lang-overlay">
-  <div class="lo-emblem">
-    <div class="lo-pulse"></div>
-    <div class="lo-brand">Khulasa.press</div>
+  <div class="lo-brand">
+    <span class="rb"></span>
+    Khulasa.press
   </div>
-  <div class="lo-sub">
-    नेपाली कांग्रेस जवाफदेही अभिलेख<br>
-    Nepal Congress Accountability Record
-  </div>
-  <div class="lo-prompt">
-    <svg class="icon" width="12" height="12"><use href="#ico-globe"/></svg>
-    Please choose your language &mdash; आफ्नो भाषा छान्नुहोस्
-  </div>
+  <div class="lo-sub">नेपाली कांग्रेस जवाफदेही अभिलेख &mdash; Nepal Congress Accountability Record</div>
+  <div class="lo-prompt">Please choose your language &mdash; आफ्नो भाषा छान्नुहोस्</div>
   <div class="lo-btns">
-    <button class="lo-btn en" onclick="chooseLang('en')">
-      <svg class="icon" width="16" height="16" style="stroke:currentColor"><use href="#ico-globe"/></svg>
-      English
-    </button>
+    <button class="lo-btn en" onclick="chooseLang('en')">English</button>
     <div class="lo-divider">/</div>
-    <button class="lo-btn ne" onclick="chooseLang('ne')">
-      <svg class="icon" width="16" height="16" style="stroke:currentColor"><use href="#ico-globe"/></svg>
-      नेपाली
-    </button>
+    <button class="lo-btn ne" onclick="chooseLang('ne')">नेपाली</button>
   </div>
-  <div class="lo-note">
-    <svg class="icon" width="10" height="10" style="stroke:rgba(255,255,255,0.3)"><use href="#ico-verified"/></svg>
-    All information from verified primary sources only
-  </div>
+  <div class="lo-note">All information from verified primary sources only</div>
+  <div class="lo-goat-hint">Sound on &mdash; click anything</div>
 </div>
 
-<!-- ═══════════════════════════════════
+<!-- ═══════════════════════════════════════
      SITE WRAPPER
-═══════════════════════════════════ -->
+═══════════════════════════════════════ -->
 <div id="site-wrap">
 
 <!-- TICKER -->
 <div class="ticker-bar">
-  <div class="tk-label" data-en="Breaking" data-ne="ताजा समाचार">
-    <span class="tk-live-dot"></span>
-    <span class="en-t">Breaking</span><span class="ne-t" style="display:none">ताजा</span>
-  </div>
+  <div class="tk-label" data-en="Breaking" data-ne="ताजा समाचार">Breaking</div>
   <div class="tk-scroll-wrap">
     <div class="tk-scroll">
-      <span class="en-t">NC leader <strong>Ram Sharan Mahat among 55 charged by CIAA</strong> — Pokhara Airport — Rs. 8.36 Billion</span>
-      <span class="ne-t" style="display:none">NC का <strong>राम शरण महत समेत ५५ जना विरुद्ध CIAA मुद्दा</strong> — पोखरा विमानस्थल — रु. ८.३६ अर्ब</span>
-      <span class="tk-sep">///
+      <span class="en-t">NC leader <strong>Ram Sharan Mahat among 55 charged by CIAA</strong> &mdash; Pokhara Airport &mdash; Rs. 8.36 Billion</span>
+      <span class="ne-t" style="display:none">NC का <strong>राम शरण महत समेत ५५ जना विरुद्ध CIAA मुद्दा</strong> &mdash; पोखरा विमानस्थल &mdash; रु. ८.३६ अर्ब</span>
+      <span class="tk-sep">///</span>
+      <span class="en-t">NC Home Minister <strong>Balkrishna Khand arrested</strong> &mdash; 875 victims &mdash; Rs. 288 Million</span>
+      <span class="ne-t" style="display:none">NC गृहमन्त्री <strong>बालकृष्ण खाण गिरफ्तार</strong> &mdash; ८७५ पीडित &mdash; रु. २८.८ करोड</span>
+      <span class="tk-sep">///</span>
+      <span class="en-t">NC member <strong>Basnet suspended from Parliament</strong> &mdash; Teramocs Scam &mdash; Rs. 3.21 Billion</span>
+      <span class="ne-t" style="display:none">NC का <strong>मोहन बहादुर बस्नेत संसदबाट निलम्बित</strong> &mdash; Teramocs &mdash; रु. ३.२१ अर्ब</span>
+      <span class="tk-sep">///</span>
+      <span class="en-t"><strong>Lalita Niwas Land Scam</strong> &mdash; NC-affiliated Rana convicted &mdash; Special Court, Feb 2024</span>
+      <span class="ne-t" style="display:none"><strong>ललिता निवास जग्गा काण्ड</strong> &mdash; NC–आबद्ध राणा दोषी &mdash; विशेष अदालत, फेब्रुअरी २०२४</span>
+      <span class="tk-sep">///</span>
+      <span>Nepal <strong>CPI Score: 34/100 &mdash; Rank 107/180</strong> &middot; Transparency International 2024</span>
+      <span class="tk-sep">///</span>
+      <!-- duplicate for seamless loop -->
+      <span class="en-t">NC leader <strong>Ram Sharan Mahat among 55 charged by CIAA</strong> &mdash; Pokhara Airport &mdash; Rs. 8.36 Billion</span>
+      <span class="ne-t" style="display:none">NC का <strong>राम शरण महत समेत ५५ जना विरुद्ध CIAA मुद्दा</strong> &mdash; पोखरा विमानस्थल &mdash; रु. ८.३६ अर्ब</span>
+      <span class="tk-sep">///</span>
+      <span class="en-t">NC Home Minister <strong>Balkrishna Khand arrested</strong> &mdash; 875 victims &mdash; Rs. 288 Million</span>
+      <span class="ne-t" style="display:none">NC गृहमन्त्री <strong>बालकृष्ण खाण गिरफ्तार</strong> &mdash; ८७५ पीडित &mdash; रु. २८.८ करोड</span>
+      <span class="tk-sep">///</span>
+      <span class="en-t">NC member <strong>Basnet suspended from Parliament</strong> &mdash; Teramocs Scam &mdash; Rs. 3.21 Billion</span>
+      <span class="ne-t" style="display:none">NC का <strong>मोहन बहादुर बस्नेत संसदबाट निलम्बित</strong> &mdash; Teramocs &mdash; रु. ३.२१ अर्ब</span>
+      <span class="tk-sep">///</span>
+      <span class="en-t"><strong>Lalita Niwas Land Scam</strong> &mdash; NC-affiliated Rana convicted &mdash; Special Court, Feb 2024</span>
+      <span class="ne-t" style="display:none"><strong>ललिता निवास जग्गा काण्ड</strong> &mdash; NC–आबद्ध राणा दोषी &mdash; विशेष अदालत, फेब्रुअरी २०२४</span>
+      <span class="tk-sep">///</span>
+      <span>Nepal <strong>CPI Score: 34/100 &mdash; Rank 107/180</strong> &middot; Transparency International 2024</span>
+    </div>
+  </div>
+</div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mh-logo"><span class="dot"></span>Khulasa.press</div>
+  <ul class="mh-nav">
+    <li><a href="#cases" class="en-t">Cases</a><a href="#cases" class="ne-t" style="display:none">मुद्दाहरू</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#data">Data</a></li>
+    <li><a href="#sources" class="en-t">Sources</a><a href="#sources" class="ne-t" style="display:none">स्रोत</a></li>
+  </ul>
+  <div class="mh-right">
+    <button id="lang-toggle" onclick="toggleLang()">Switch Language</button>
+    <div class="mh-date">February 2026</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <div class="ey-rule"></div>
+    <div class="ey-text en-t">Nepal Congress Accountability Record &mdash; 2026</div>
+    <div class="ey-text ne-t" style="display:none">नेपाली कांग्रेस जवाफदेही अभिलेख &mdash; २०२६</div>
+  </div>
+  <div class="hero-grid">
+    <div>
+      <h1 class="hero-h1 en-t">
+        <span class="dim">Power,</span><br>
+        <span class="acc">Corruption,</span><br>
+        Impunity.
+      </h1>
+      <h1 class="hero-h1 ne-t" style="display:none">
+        <span class="dim">सत्ता,</span><br>
+        <span class="acc">भ्रष्टाचार,</span><br>
+        दण्डहीनता।
+      </h1>
+      <p class="hero-standfirst en-t">
+        Documented corruption cases connected to the Nepali Congress — court verdicts, CIAA prosecutions, and public accountability failures — drawn entirely from verified primary sources.
+      </p>
+      <p class="hero-standfirst ne-t" style="display:none">
+        नेपाली कांग्रेससँग सम्बन्धित प्रमाणित भ्रष्टाचार मुद्दाहरू, अदालतका फैसला, CIAA अभियोजन — केवल विश्वसनीय प्राथमिक स्रोतहरूबाट।
+      </p>
+    </div>
+    <div>
+      <div class="stat-panel">
+        <div class="sp-head en-t">Verified Figures &mdash; CIAA &amp; Court Records</div>
+        <div class="sp-head ne-t" style="display:none">प्रमाणित तथ्याङ्क &mdash; CIAA र अदालती अभिलेख</div>
+        <div class="sp-cell">
+          <span class="sp-n" data-count="55">0</span>
+          <span class="sp-l en-t">Accused in one case<br>(Pokhara Airport, Dec 2025)</span>
+          <span class="sp-l ne-t" style="display:none">एक मुद्दामा अभियुक्त<br>(पोखरा Airport, दिस २०२५)</span>
+        </div>
+        <div class="sp-cell">
+          <span class="sp-n" data-count="875">0</span>
+          <span class="sp-l en-t">Citizens defrauded by NC Minister<br>(Bhutanese Refugee Scam)</span>
+          <span class="sp-l ne-t" style="display:none">NC मन्त्रीद्वारा ठगिएका नागरिक<br>(भुटानी शरणार्थी घोटाला)</span>
+        </div>
+        <div class="sp-cell">
+          <span class="sp-n" data-prefix="Rs." data-count="12" data-suffix="B+">Rs.0</span>
+          <span class="sp-l en-t">Total estimated financial loss<br>(all verified cases)</span>
+          <span class="sp-l ne-t" style="display:none">कुल अनुमानित आर्थिक क्षति<br>(सबै प्रमाणित मुद्दाहरू)</span>
+        </div>
+        <div class="sp-cell">
+          <span class="sp-n" data-count="0">0</span>
+          <span class="sp-l en-t">Senior NC leaders in prison<br>(as of 2026)</span>
+          <span class="sp-l ne-t" style="display:none">वरिष्ठ NC नेता कारागारमा<br>(२०२६ सम्म)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ALERT BAND -->
+<div class="alert-band">
+  <div class="ab-label en-t">Confirmed Cases</div>
+  <div class="ab-label ne-t" style="display:none">प्रमाणित मुद्दाहरू</div>
+  <div class="ab-wrap">
+    <div class="ab-scroll">
+      <span>Pokhara Airport &mdash; <strong>Rs. 8.36 Billion</strong> &mdash; CIAA Dec 2025</span>
+      <span>Refugee Scam &mdash; <strong>Rs. 288 Million</strong> &mdash; NC Minister Arrested</span>
+      <span>Lalita Niwas &mdash; <strong>299+ Ropani</strong> &mdash; NC-linked Rana Convicted</span>
+      <span>Teramocs &mdash; <strong>Rs. 3.21 Billion</strong> &mdash; NC Member Suspended</span>
+      <span>Nepal CPI 2024 &mdash; <strong>34/100 &mdash; Rank 107/180</strong> &mdash; Transparency International</span>
+      <span>Pokhara Airport &mdash; <strong>Rs. 8.36 Billion</strong> &mdash; CIAA Dec 2025</span>
+      <span>Refugee Scam &mdash; <strong>Rs. 288 Million</strong> &mdash; NC Minister Arrested</span>
+      <span>Lalita Niwas &mdash; <strong>299+ Ropani</strong> &mdash; NC-linked Rana Convicted</span>
+      <span>Teramocs &mdash; <strong>Rs. 3.21 Billion</strong> &mdash; NC Member Suspended</span>
+      <span>Nepal CPI 2024 &mdash; <strong>34/100 &mdash; Rank 107/180</strong> &mdash; Transparency International</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content" id="cases">
+
+  <div class="sec-head fadein">
+    <span class="sh-num">01</span>
+    <div class="sh-rule"></div>
+    <h2 class="sh-title en-t">Court &amp; CIAA Verified &mdash; No Speculation</h2>
+    <h2 class="sh-title ne-t" style="display:none">अदालत र CIAA द्वारा प्रमाणित &mdash; कुनै अनुमान छैन</h2>
+    <span class="sh-badge b-red">Court Verified</span>
+  </div>
+
+  <!-- CASE 1 -->
+  <div class="case-card fadein" id="case1">
+    <div class="cc-top">
+      <div class="cc-tags">
+        <span class="cc-tag t-red en-t">CIAA Case Filed</span>
+        <span class="cc-tag t-red ne-t" style="display:none">CIAA मुद्दा दर्ता</span>
+        <span class="cc-tag t-bold">Rs. 8.36 Billion ($74M)</span>
+        <span class="cc-tag t-ink en-t">55 Accused</span>
+        <span class="cc-tag t-ink ne-t" style="display:none">५५ अभियुक्त</span>
+        <span class="cc-tag t-ink">December 7, 2025</span>
+      </div>
+      <a href="https://www.occrp.org/en/news/nepal-files-corruption-charges-against-55-officials-chinese-contractor-over-pokhara-airport" target="_blank" rel="noopener" class="cc-src-btn">OCCRP Source</a>
+    </div>
+    <div class="cc-doc">
+      <div class="ev-doc">
+        <div class="ev-doc-row">
+          <div class="ev-stamp">CIAA<br>CASE</div>
+          <div class="ev-meta">
+            <div class="ev-title">Commission for Investigation of Abuse of Authority</div>
+            <div class="ev-sub">Special Court, Kathmandu &mdash; Filed: December 7, 2025</div>
+          </div>
+        </div>
+        <div class="ev-body">
+          <span class="field">Accused:</span> <span class="num">55 individuals + 1 company</span><br>
+          <span class="field">State loss:</span> <span class="num">Rs. 8,360,000,000 (USD $74 million)</span><br>
+          <span class="field">Lead accused:</span> <span class="hl">Ram Sharan Mahat (NC, Former Finance Minister)</span><br>
+          <span class="field">Also charged:</span> 4 former Tourism Ministers, 10 former Secretaries, senior CAAN officials<br>
+          <span class="field">Foreign accused:</span> <span class="hl">China CAMC Engineering Co. Ltd + Chairman Wang Bo</span>
+        </div>
+      </div>
+    </div>
+    <div class="cc-body">
+      <div class="cc-kicker en-t">One of Nepal's largest ever corruption cases</div>
+      <div class="cc-kicker ne-t" style="display:none">नेपालको सबैभन्दा ठूलो भ्रष्टाचार मुद्दाहरू मध्ये एक</div>
+      <h3 class="cc-h3 en-t">Pokhara Airport Scandal &mdash; NC's Ram Sharan Mahat Among 55 Charged by CIAA</h3>
+      <h3 class="cc-h3 ne-t" style="display:none">पोखरा विमानस्थल घोटाला &mdash; NC का राम शरण महत समेत ५५ जनाविरुद्ध CIAA मुद्दा</h3>
+      <div class="cc-who">Ram Sharan Mahat (NC Senior Leader, Former Finance Minister) + 54 others</div>
+      <div class="cc-date">CIAA Filed: December 7, 2025 &nbsp;&middot;&nbsp; Special Court, Kathmandu</div>
+      <div class="stat-inline">
+        <span class="si-n">Rs.8.36B</span>
+        <span class="si-l en-t">Estimated State Loss<br>Confirmed by CIAA</span>
+        <span class="si-l ne-t" style="display:none">अनुमानित राज्य क्षति<br>CIAA द्वारा प्रमाणित</span>
+      </div>
+      <p class="cc-text en-t">
+        CIAA filed charges against <strong>55 individuals and one company</strong> in one of Nepal's largest-ever corruption cases — the construction of Pokhara Regional International Airport, built on a USD $216 million Chinese Exim Bank loan.<br><br>
+        CIAA alleges <em>Rs. 8.36 billion ($74 million)</em> was siphoned through inflated cost estimates, single-source bidding awarded exclusively to a Chinese contractor, and manipulated construction oversight. NC senior leader <strong>Ram Sharan Mahat</strong> is accused of approving an irregular loan agreement while serving as Finance Minister in 2016.<br><br>
+        A parliamentary Public Accounts Subcommittee report had already flagged Rs. 10 billion in irregularities and recommended prosecution. OCCRP described the filing as <em>"a historic step in Nepal's anti-corruption efforts."</em>
+      </p>
+      <p class="cc-text ne-t" style="display:none">
+        CIAA ले <strong>५५ व्यक्ति र एक कम्पनी</strong>विरुद्ध विशेष अदालतमा मुद्दा दर्ता गर्‍यो — पोखरा क्षेत्रीय अन्तर्राष्ट्रिय विमानस्थलको निर्माणमा। CIAA को दाबी: <em>रु. ८.३६ अर्ब ($74 मिलियन)</em> फुलाइएको लागत अनुमान, एकतर्फी बोलपत्र, र निर्माण निरीक्षणमा हेरफेरमार्फत अपचलन। NC वरिष्ठ नेता <strong>राम शरण महत</strong>लाई अर्थमन्त्री रहँदा (२०१६) अनियमित ऋण सम्झौता स्वीकृत गरेको आरोप छ।
+      </p>
+    </div>
+    <div class="cc-foot">
+      <span class="cf-src">OCCRP &middot; The Himalayan Times &middot; Fiscal Nepal &middot; Ekantipur &mdash; December 7, 2025</span>
+      <a class="cf-link" href="https://www.occrp.org/en/news/nepal-files-corruption-charges-against-55-officials-chinese-contractor-over-pokhara-airport" target="_blank" rel="noopener">occrp.org &mdash; Full Report</a>
+    </div>
+  </div>
+
+  <!-- CASE 2 -->
+  <div class="case-card fadein" id="case2">
+    <div class="cc-top">
+      <div class="cc-tags">
+        <span class="cc-tag t-red en-t">NC Minister Arrested</span>
+        <span class="cc-tag t-red ne-t" style="display:none">NC मन्त्री गिरफ्तार</span>
+        <span class="cc-tag t-red en-t">Treason + Organised Crime</span>
+        <span class="cc-tag t-red ne-t" style="display:none">राजद्रोह + संगठित अपराध</span>
+        <span class="cc-tag t-bold">875 Victims</span>
+        <span class="cc-tag t-ink">Rs. 288 Million</span>
+      </div>
+      <a href="https://www.aljazeera.com/news/2023/5/24/ex-nepal-ministers-among-30-charged-in-us-bound-refugee-scam" target="_blank" rel="noopener" class="cc-src-btn">Al Jazeera Source</a>
+    </div>
+    <div class="cc-doc">
+      <div class="ev-doc">
+        <div class="ev-doc-row">
+          <div class="ev-stamp">ARREST<br>ORDER</div>
+          <div class="ev-meta">
+            <div class="ev-title">Kathmandu District Court &mdash; Remand Order</div>
+            <div class="ev-sub">Issued: June 16, 2023 &mdash; Bhutanese Refugee Fraud, 30 Charged</div>
+          </div>
+        </div>
+        <div class="ev-body">
+          <span class="field">Lead accused:</span> <span class="hl">Balkrishna Khand (NC, Former Home Minister 2021–22)</span><br>
+          <span class="field">Victims:</span> <span class="num">875 Nepali citizens</span> — each paid Rs. 150,000–500,000<br>
+          <span class="field">Total defrauded:</span> <span class="num">Rs. 288,170,000</span><br>
+          <span class="field">Charges:</span> Treason &middot; Organised Crime &middot; Fraud &middot; Document Forgery<br>
+          <span class="field">Also investigated:</span> <span class="hl">Arzoo Rana Deuba (NC MP, wife of NC President Deuba)</span>
+        </div>
+      </div>
+    </div>
+    <div class="cc-body">
+      <div class="cc-kicker en-t">NC Home Minister arrested &mdash; NC President defended him</div>
+      <div class="cc-kicker ne-t" style="display:none">NC गृहमन्त्री गिरफ्तार &mdash; NC प्रमुखले बचाए</div>
+      <h3 class="cc-h3 en-t">Bhutanese Refugee Scam &mdash; NC Home Minister Arrested. NC President Publicly Defended Him.</h3>
+      <h3 class="cc-h3 ne-t" style="display:none">भुटानी शरणार्थी घोटाला &mdash; NC गृहमन्त्री गिरफ्तार। NC प्रमुख देउवाले सार्वजनिक बचाउ गरे।</h3>
+      <div class="cc-who">Balkrishna Khand (NC, Former Home Minister) &middot; Arzoo Rana Deuba (NC MP, wife of Deuba)</div>
+      <div class="cc-date">Arrested: May 10–13, 2023 &nbsp;&middot;&nbsp; Remanded: June 16, 2023 &nbsp;&middot;&nbsp; Kathmandu District Court</div>
+      <div class="stat-inline">
+        <span class="si-n">875</span>
+        <span class="si-l en-t">Citizens Defrauded<br>Under NC Minister's Scheme</span>
+        <span class="si-l ne-t" style="display:none">नागरिक ठगिए<br>NC मन्त्रीको योजनामा</span>
+      </div>
+      <p class="cc-text en-t">
+        A political-bureaucratic syndicate <em>defrauded 875 Nepali citizens of Rs. 288 million</em> — selling fake Bhutanese refugee documents with promises of US resettlement. NC Home Minister Khand is accused of <strong>falsifying a 2019 Cabinet taskforce report</strong> to add 875 Nepalis to the Bhutanese refugee list.<br><br>
+        Charges carry 3–20 years imprisonment. <strong>NC's response was most damning:</strong> while CPN-UML immediately suspended its own accused leader Raimajhi, <strong>NC kept Khand as a Central Working Committee member</strong>. NC President Deuba publicly defended Khand. NC MP Arzoo Rana Deuba (Deuba's wife) was also brought under investigation, as reported by The Diplomat.
+      </p>
+      <p class="cc-text ne-t" style="display:none">
+        एक राजनीतिक–नोकरशाही सिन्डिकेटले <em>८७५ नेपाली नागरिकसँग रु. २८.८ करोड ठग्यो</em>। NC गृहमन्त्री खाणले <strong>२०१९ को कार्यदलको रिपोर्ट नक्कली बनाई</strong> ८७५ नेपालीलाई भुटानी शरणार्थी सूचीमा थपेको आरोप छ। CPN-UML ले आफ्नो अभियुक्त नेता रायमाझीलाई <em>तुरुन्तै निलम्बन गर्‍यो</em>, तर <strong>NC ले खाणलाई केन्द्रीय कार्यसमितिको सदस्य कायम राख्यो</strong>।
+      </p>
+    </div>
+    <div class="cc-foot">
+      <span class="cf-src">Al Jazeera (May 24, 2023) &middot; Foreign Policy (July 3, 2023) &middot; The Diplomat (May 2023)</span>
+      <a class="cf-link" href="https://www.aljazeera.com/news/2023/5/24/ex-nepal-ministers-among-30-charged-in-us-bound-refugee-scam" target="_blank" rel="noopener">aljazeera.com &mdash; Full Report</a>
+    </div>
+  </div>
+
+  <!-- PULL QUOTE 1 -->
+  <div class="pullquote fadein">
+    <div class="pq-mark">&ldquo;</div>
+    <div class="pq-text">
+      "Arzoo Deuba, a parliamentarian from the Nepali Congress and widely believed to wield power behind the scenes, is implicated in the investigation. She is the wife of Nepali Congress Chief Sher Bahadur Deuba."
+    </div>
+    <cite class="pq-cite">&mdash; The Diplomat, May 29, 2023 &nbsp;&middot;&nbsp; thediplomat.com</cite>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="sec-head fadein">
+    <span class="sh-num">02</span>
+    <div class="sh-rule"></div>
+    <h2 class="sh-title en-t">Further Verified Cases &mdash; Court &amp; CIAA</h2>
+    <h2 class="sh-title ne-t" style="display:none">थप प्रमाणित मुद्दाहरू &mdash; अदालत र CIAA</h2>
+    <span class="sh-badge b-ink">Verified Cases</span>
+  </div>
+
+  <div class="grid-2">
+    <!-- LALITA NIWAS -->
+    <div class="sm-card r fadein">
+      <div class="sm-ghost-num">03</div>
+      <div class="sm-tags">
+        <span class="cc-tag t-red en-t">NC-Linked Convicted</span>
+        <span class="cc-tag t-red ne-t" style="display:none">NC–आबद्ध दोषी</span>
+        <span class="cc-tag t-ink en-t">Land Grab</span>
+        <span class="cc-tag t-ink ne-t" style="display:none">जग्गा चोरी</span>
+        <span class="cc-tag t-ink">Special Court</span>
+      </div>
+      <div class="sm-h4 en-t">Lalita Niwas Land Scam &mdash; NC Deputy PM &amp; Rana Family</div>
+      <div class="sm-h4 ne-t" style="display:none">ललिता निवास जग्गा काण्ड &mdash; NC उप-PM र राणा परिवार</div>
+      <div class="sm-who">Bijay Kumar Gachhadar (NC, Former Deputy PM) &middot; Rukma Shamsher Rana</div>
+      <div class="sm-date">CIAA Filed: Feb 5, 2020 &nbsp;&middot;&nbsp; Verdict: Feb 15, 2024</div>
+      <div class="sm-body en-t">
+        CIAA filed charges against <strong>175 individuals</strong> — including NC leader Gachhadar and <strong>Rukma Shamsher Rana (NC founding family)</strong> — for illegally registering <strong>299+ ropani of government land</strong> in Baluwatar into private names via forged documents.<br><br>
+        <strong>Verdict (Feb 15, 2024):</strong> Special Court found <em>Rana guilty</em> — 2 years + Rs. 848,000 fine. Gachhadar acquitted via "policy decision" loophole. <em>CIAA has appealed to the Supreme Court (2025).</em>
+      </div>
+      <div class="sm-body ne-t" style="display:none">
+        CIAA ले <strong>१७५ व्यक्ति</strong>विरुद्ध मुद्दा दर्ता गर्‍यो। बल्वाटारको <strong>२९९+ रोपनी सरकारी जग्गा</strong> नक्कली कागजातमार्फत व्यक्तिगत नाममा दर्ता गरेको आरोप। फैसला: विशेष अदालतले <em>राणालाई दोषी</em> ठहर गर्‍यो (२ वर्ष + रु. ८४.८ लाख जरिवाना)।
+      </div>
+      <div class="sm-foot">
+        <span class="sm-src">Kathmandu Post &middot; myRepublica &middot; Fiscal Nepal</span>
+        <a class="sm-lnk" href="https://kathmandupost.com/national/2024/02/15/special-court-acquits-former-ministers-as-it-convicts-civil-servants-on-lalita-niwas-land-scam" target="_blank" rel="noopener">kathmandupost.com</a>
+      </div>
+    </div>
+
+    <!-- TERAMOCS -->
+    <div class="sm-card w fadein">
+      <div class="sm-ghost-num">04</div>
+      <div class="sm-tags">
+        <span class="cc-tag t-red en-t">Suspended from Parliament</span>
+        <span class="cc-tag t-red ne-t" style="display:none">संसदबाट निलम्बित</span>
+        <span class="cc-tag t-ink">Rs. 3.21 Billion</span>
+      </div>
+      <div class="sm-h4 en-t">Teramocs Telecom Scam &mdash; NC Member Basnet Suspended</div>
+      <div class="sm-h4 ne-t" style="display:none">Teramocs टेलिकम घोटाला &mdash; NC सदस्य बस्नेत निलम्बित</div>
+      <div class="sm-who">Mohan Bahadur Basnet (NC Central Committee, Former Minister)</div>
+      <div class="sm-date">CIAA Filed: May 2025 &nbsp;&middot;&nbsp; Parliament Suspension: May 15, 2025</div>
+      <div class="sm-body en-t">
+        CIAA filed a Rs. 3.21 billion corruption case over the Nepal Telecommunications Authority's <em>Teramocs system procurement</em>. <strong>NC member Basnet suspended from Parliament on May 15, 2025.</strong> The Himalayan Times: <em>"The most prominent corruption prosecution of the year."</em> CIAA cited bid manipulation, illegal decisions, and deliberate state loss.
+      </div>
+      <div class="sm-body ne-t" style="display:none">
+        Nepal दूरसञ्चार प्राधिकरणको <em>Teramocs प्रणाली खरिदमा</em> रु. ३.२१ अर्बको भ्रष्टाचार मुद्दा दर्ता। <strong>NC सदस्य बस्नेत मे १५, २०२५ मा संसदबाट निलम्बित।</strong>
+      </div>
+      <div class="sm-foot">
+        <span class="sm-src">The Himalayan Times &middot; Khabarhub English (2025)</span>
+        <a class="sm-lnk" href="https://thehimalayantimes.com/business/2025-in-review-the-year-the-ciaa-took-on-big-corruption-at-the-special-court" target="_blank" rel="noopener">thehimalayantimes.com</a>
+      </div>
+    </div>
+
+    <!-- GURUNG -->
+    <div class="sm-card fadein">
+      <div class="sm-ghost-num">05</div>
+      <div class="sm-tags">
+        <span class="cc-tag t-ink en-t">Under Investigation</span>
+        <span class="cc-tag t-ink ne-t" style="display:none">छानबिनमा</span>
+        <span class="cc-tag t-ink en-t">Cooperative Fraud</span>
+        <span class="cc-tag t-ink ne-t" style="display:none">सहकारी जालसाजी</span>
+      </div>
+      <div class="sm-h4 en-t">NC Vice-President Dhanraj Gurung &mdash; Cooperative Fraud Investigation</div>
+      <div class="sm-h4 ne-t" style="display:none">NC उपसभापति धनराज गुरुङ &mdash; सहकारी जालसाजी छानबिन</div>
+      <div class="sm-who">Dhanraj Gurung &nbsp;&middot;&nbsp; Vice-President, Nepali Congress</div>
+      <div class="sm-date">Active Investigation, 2024–2025</div>
+      <div class="sm-body en-t">
+        NC's own Vice-President is under investigation for <em>cooperative fraud</em>. Investigators suspect <strong>a fake divorce from his wife to evade financial accountability</strong>. Khabarhub, citing analysts: <em>"A complete erosion of ethical standards within the party."</em> Investigation ongoing with no consequences to date.
+      </div>
+      <div class="sm-body ne-t" style="display:none">
+        NC को आफ्नै उपसभापति <em>सहकारी जालसाजीको छानबिनमा</em>। अनुसन्धानकर्ताहरूको शंका: जवाफदेहिताबाट बच्न <strong>आफ्नी श्रीमतीसँग नक्कली सम्बन्धविच्छेद</strong> गरे। Khabarhub: <em>"नैतिक मानकको पूर्ण क्षरण।"</em>
+      </div>
+      <div class="sm-foot">
+        <span class="sm-src">Khabarhub English (2025)</span>
+        <a class="sm-lnk" href="https://english.khabarhub.com/2025/28/471424/" target="_blank" rel="noopener">khabarhub.com</a>
+      </div>
+    </div>
+
+    <!-- NC SHIELDS KHAND -->
+    <div class="sm-card fadein">
+      <div class="sm-ghost-num">06</div>
+      <div class="sm-tags">
+        <span class="cc-tag t-red en-t">Impunity</span>
+        <span class="cc-tag t-red ne-t" style="display:none">दण्डहीनता</span>
+        <span class="cc-tag t-ink en-t">Party Protection</span>
+        <span class="cc-tag t-ink ne-t" style="display:none">पार्टी संरक्षण</span>
+      </div>
+      <div class="sm-h4 en-t">NC Shielded Convicted Khand &mdash; Deuba Publicly Defended Him</div>
+      <div class="sm-h4 ne-t" style="display:none">NC ले दोषी खाणलाई बचायो &mdash; देउवाले सार्वजनिक समर्थन जनाए</div>
+      <div class="sm-who">Sher Bahadur Deuba (NC President, Former PM) &middot; Balkrishna Khand</div>
+      <div class="sm-date">June–December 2023 &nbsp;&middot;&nbsp; Foreign Policy and Kathmandu Post confirmed</div>
+      <div class="sm-body en-t">
+        After the District Court remanded Khand, NC President Deuba <strong>publicly expressed support and anticipated his acquittal.</strong> While UML immediately suspended its accused leader, <em>NC kept Khand as a Central Working Committee member.</em><br><br>
+        Foreign Policy (July 2023) directly documented this contrast — one party accepted accountability, NC provided cover.
+      </div>
+      <div class="sm-body ne-t" style="display:none">
+        जिल्ला अदालतले खाणलाई थुनामा राखेपछि NC प्रमुख देउवाले <strong>सार्वजनिक रूपमा खाणको समर्थन गरे</strong>। UML ले आफ्नो अभियुक्त नेता तुरुन्त निलम्बन गर्दा, <em>NC ले खाणको केन्द्रीय कार्यसमिति सदस्यता कायमै राख्यो।</em>
+      </div>
+      <div class="sm-foot">
+        <span class="sm-src">Foreign Policy (July 3, 2023) &middot; Kathmandu Post</span>
+        <a class="sm-lnk" href="https://foreignpolicy.com/2023/07/03/nepal-fake-bhutanese-refugee-scam-anti-corruption/" target="_blank" rel="noopener">foreignpolicy.com</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PULL QUOTE 2 -->
+  <div class="pullquote fadein">
+    <div class="pq-mark">&ldquo;</div>
+    <div class="pq-text">
+      "Leaders from all three major political parties have been implicated in major scandals. People rightly believe that formation of probe panels is no more than an attempt to douse immediate public anger."
+    </div>
+    <cite class="pq-cite">&mdash; The Kathmandu Post, Editorial &mdash; "Maze of Scandals," 2025</cite>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="sec-head fadein" id="timeline">
+    <span class="sh-num">03</span>
+    <div class="sh-rule"></div>
+    <h2 class="sh-title en-t">Timeline of Failure &mdash; 2009 to 2026</h2>
+    <h2 class="sh-title ne-t" style="display:none">कालक्रम &mdash; विफलताको इतिहास (२००९–२०२६)</h2>
+    <span class="sh-badge b-dark">Verified Timeline</span>
+  </div>
+
+  <div class="tl-wrap fadein">
+    <div class="tl-head en-t">Verified Accountability Failures &nbsp;&middot;&nbsp; Chronological</div>
+    <div class="tl-head ne-t" style="display:none">सत्यापित जवाफदेहिता विफलताहरू &nbsp;&middot;&nbsp; क्रमबद्ध</div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-yr">2009–11</div><div class="tl-dot"></div></div>
+      <div class="tl-right">
+        <div class="tl-title en-t">Lalita Niwas Land Grab &mdash; Decision Made Under NC-Aligned Government</div>
+        <div class="tl-title ne-t" style="display:none">ललिता निवास जग्गा लुट &mdash; NC-सहयोगी सरकारमा निर्णय</div>
+        <div class="tl-desc en-t">Under PM Madhav Kumar Nepal's coalition, 299+ ropani of government land in Baluwatar was illegally transferred to private individuals including NC-affiliated persons. CIAA did not file charges for over a decade.</div>
+        <div class="tl-desc ne-t" style="display:none">PM माधवकुमार नेपालको गठबन्धन सरकारमा बल्वाटारको २९९+ रोपनी सरकारी जग्गा NC-आबद्ध व्यक्तिहरूसहित निजी व्यक्तिहरूको नाममा अवैध रूपमा हस्तान्तरण।</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-yr">2016</div><div class="tl-dot"></div></div>
+      <div class="tl-right">
+        <div class="tl-title en-t">NC Finance Minister Mahat Signed Disputed Pokhara Airport Chinese Loan Deal</div>
+        <div class="tl-title ne-t" style="display:none">NC अर्थमन्त्री महतले पोखरा विमानस्थलको विवादास्पद चिनियाँ ऋण सम्झौता हस्ताक्षर गरे</div>
+        <div class="tl-desc en-t">China Exim Bank loan agreement signed March 21, 2016. CIAA later alleged the agreement enabled Rs. 8.36B in systematic corruption, inflated estimates, and single-source contractor awards.</div>
+        <div class="tl-desc ne-t" style="display:none">मार्च २१, २०१६ मा China Exim Bank ऋण सम्झौता हस्ताक्षरित। CIAA ले पछि दाबी गर्‍यो: सम्झौताले नै रु. ८.३६ अर्बको व्यवस्थित भ्रष्टाचार सम्भव बनायो।</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-yr">2021–22</div><div class="tl-dot"></div></div>
+      <div class="tl-right">
+        <div class="tl-title en-t">NC Home Minister Khand Allegedly Enabled Rs. 288M Bhutanese Refugee Fraud</div>
+        <div class="tl-title ne-t" style="display:none">NC गृहमन्त्री खाणले रु. २८.८ करोडको भुटानी शरणार्थी जालसाजी सम्भव बनाए</div>
+        <div class="tl-desc en-t">While serving as Home Minister, Khand allegedly falsified official records enabling 875 Nepali citizens to be defrauded of Rs. 288 million through fake refugee documentation.</div>
+        <div class="tl-desc ne-t" style="display:none">खाण गृहमन्त्री रहँदा, ८७५ नेपाली नागरिकलाई नक्कली कागजातमार्फत रु. २८.८ करोड ठगिएको आरोप।</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-yr">May 2023</div><div class="tl-dot"></div></div>
+      <div class="tl-right">
+        <div class="tl-title en-t">Khand Arrested. Deuba Defended Him. NC Kept Him on Party Committee.</div>
+        <div class="tl-title ne-t" style="display:none">खाण गिरफ्तार। देउवाले बचाए। NC ले पार्टीमा कायम राख्यो।</div>
+        <div class="tl-desc en-t">Police arrested Khand (May 10–13). Court remanded him (June 16). NC President Deuba gave public defense. NC retained Khand as CWC member while UML immediately suspended its own accused leader. Arzoo Rana Deuba (NC MP) also investigated.</div>
+        <div class="tl-desc ne-t" style="display:none">प्रहरीले खाणलाई पक्राउ गर्‍यो (मे १०–१३)। अदालतले थुनामा राख्यो (जुन १६)। NC प्रमुख देउवाले सार्वजनिक बचाउ गरे। UML ले आफ्नो अभियुक्त तुरुन्त निलम्बन गर्दा NC ले खाणलाई CWC सदस्य राख्यो।</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-yr">Feb 2024</div><div class="tl-dot"></div></div>
+      <div class="tl-right">
+        <div class="tl-title en-t">Lalita Niwas Verdict: NC-Linked Rana Convicted. Former NC Deputy PM Escaped via Loophole.</div>
+        <div class="tl-title ne-t" style="display:none">ललिता निवास फैसला: NC–आबद्ध राणा दोषी। पूर्व NC उप-PM कानुनी खाल्डोमार्फत उम्किए।</div>
+        <div class="tl-desc en-t">Special Court convicted Rana (2 years + Rs. 848,000 fine). Former NC Deputy PM Gachhadar acquitted via "policy decision" argument. CIAA appealed to Supreme Court in 2025.</div>
+        <div class="tl-desc ne-t" style="display:none">विशेष अदालतले राणालाई दोषी ठहर गर्‍यो (२ वर्ष + रु. ८४.८ लाख जरिवाना)। CIAA ले २०२५ मा सर्वोच्चमा पुनरावेदन गर्‍यो।</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-yr">May 2025</div><div class="tl-dot"></div></div>
+      <div class="tl-right">
+        <div class="tl-title en-t">NC Member Basnet Suspended from Parliament — Teramocs Rs. 3.21B Case</div>
+        <div class="tl-title ne-t" style="display:none">NC सदस्य बस्नेत Teramocs (रु. ३.२१ अर्ब) मुद्दामा संसदबाट निलम्बित</div>
+        <div class="tl-desc en-t">CIAA filed major telecom procurement corruption case. NC member Basnet suspended May 15, 2025. The Himalayan Times: "Most prominent corruption prosecution of the year."</div>
+        <div class="tl-desc ne-t" style="display:none">CIAA ले ठूलो टेलिकम खरिद भ्रष्टाचार मुद्दा दर्ता गर्‍यो। NC सदस्य बस्नेत मे १५, २०२५ मा संसदबाट निलम्बित।</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-yr">Dec 7, 2025</div><div class="tl-dot"></div></div>
+      <div class="tl-right">
+        <div class="tl-title en-t">NC's Mahat Among 55 Charged in Nepal's Largest-Ever Corruption Case</div>
+        <div class="tl-title ne-t" style="display:none">NC का महत समेत ५५ जनाविरुद्ध नेपालकै सबैभन्दा ठूलो भ्रष्टाचार मुद्दाहरू मध्ये एक</div>
+        <div class="tl-desc en-t">CIAA filed Rs. 8.36B ($74M) Pokhara Airport case against 55 individuals. Confirmed by OCCRP, The Himalayan Times, and Fiscal Nepal.</div>
+        <div class="tl-desc ne-t" style="display:none">CIAA ले रु. ८.३६ अर्ब ($74M) को पोखरा विमानस्थल मुद्दा ५५ व्यक्तिविरुद्ध दर्ता गर्‍यो। OCCRP, The Himalayan Times, र Fiscal Nepal सबैले पुष्टि गरे।</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- CPI DATA BAND -->
+<div class="data-band" id="data">
+  <div class="db-inner">
+    <div class="db-score">
+      <span class="db-num">34</span>
+      <span class="db-denom">/ 100</span>
+      <span class="db-label en-t">Nepal CPI Score 2024<br>Transparency International<br>Rank: 107 / 180 Countries</span>
+      <span class="db-label ne-t" style="display:none">नेपाल CPI स्कोर २०२४<br>Transparency International<br>Rank: १०७ / १८० देशहरू</span>
+    </div>
+    <div class="db-right">
+      <h3 class="en-t">Nepal Under NC Governance: 34/100</h3>
+      <h3 class="ne-t" style="display:none">NC को शासनकालमा नेपाल: ३४/१००</h3>
+      <p class="en-t">Transparency International's 2024 Corruption Perceptions Index ranks Nepal <strong>107th of 180 countries</strong>, scoring only 34/100. CIAA received <strong>26,918 complaints in FY 2023–24</strong> — over 6,000 more than the prior year. This record was built across decades of NC-led and NC-aligned governments.</p>
+      <p class="ne-t" style="display:none">Transparency International को २०२४ Corruption Perceptions Index मा नेपाल <strong>१८० देशमध्ये १०७ औं स्थान</strong> — स्कोर केवल ३४/१००। CIAA ले FY २०२३–२४ मा <strong>२६,९१८ उजुरी</strong> प्राप्त गर्‍यो।</p>
+      <div class="bars">
+        <div class="bar-row"><div class="bar-l en-t">NC Members Accused/Convicted</div><div class="bar-l ne-t" style="display:none">NC सदस्य अभियुक्त/दोषी</div><div class="bar-track"><div class="bar-fill" style="width:80%"></div></div><div class="bar-val">8+</div></div>
+        <div class="bar-row"><div class="bar-l en-t">Estimated Financial Losses</div><div class="bar-l ne-t" style="display:none">अनुमानित आर्थिक क्षति</div><div class="bar-track"><div class="bar-fill" style="width:95%;animation-delay:.3s"></div></div><div class="bar-val">Rs.12B+</div></div>
+        <div class="bar-row"><div class="bar-l en-t">Senior NC Leaders in Prison</div><div class="bar-l ne-t" style="display:none">वरिष्ठ NC नेता कारागारमा</div><div class="bar-track"><div class="bar-fill low" style="width:3%;animation-delay:.55s"></div></div><div class="bar-val">~0</div></div>
+        <div class="bar-row"><div class="bar-l en-t">Party-Level Accountability</div><div class="bar-l ne-t" style="display:none">पार्टी–स्तर जवाफदेहिता</div><div class="bar-track"><div class="bar-fill low" style="width:8%;animation-delay:.75s"></div></div><div class="bar-val en-t">Low</div><div class="bar-val ne-t" style="display:none">न्यून</div></div>
+        <div class="bar-row"><div class="bar-l">Nepal CPI 2024</div><div class="bar-track"><div class="bar-fill warm" style="width:34%;animation-delay:.95s"></div></div><div class="bar-val">34/100</div></div>
+        <div style="margin-top:10px;font-family:var(--f-mono);font-size:9px;color:var(--ink-4);letter-spacing:.07em;line-height:1.7">
+          Sources: Transparency International CPI 2024 &middot; CIAA Annual Report 2023–24 &middot; Fiscal Nepal &middot; The Himalayan Times
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content" id="sources">
+  <div class="sec-head fadein">
+    <span class="sh-num">04</span>
+    <div class="sh-rule"></div>
+    <h2 class="sh-title en-t">All Primary Sources &mdash; No Rumours</h2>
+    <h2 class="sh-title ne-t" style="display:none">सबै प्राथमिक स्रोतहरू &mdash; कुनै अफवाह छैन</h2>
+    <span class="sh-badge b-red">Open Sources Only</span>
+  </div>
+
+  <div class="grid-3 fadein">
+    <div class="src-card">
+      <h4 class="en-t">International Media</h4>
+      <h4 class="ne-t" style="display:none">अन्तर्राष्ट्रिय मिडिया</h4>
+      <ul class="src-list">
+        <li><strong>OCCRP</strong> &mdash; Pokhara Airport Case</li>
+        <li><strong>Al Jazeera</strong> &mdash; Bhutanese Refugee Scam</li>
+        <li><strong>Foreign Policy</strong> &mdash; NC Accountability Analysis</li>
+        <li><strong>The Diplomat</strong> &mdash; Arzoo Rana Deuba Investigation</li>
+        <li><strong>Transparency International</strong> &mdash; CPI 2024</li>
+      </ul>
+    </div>
+    <div class="src-card">
+      <h4 class="en-t">Nepal Press (Established)</h4>
+      <h4 class="ne-t" style="display:none">नेपाली प्रेस (स्थापित)</h4>
+      <ul class="src-list">
+        <li><strong>The Kathmandu Post</strong> &mdash; All Major Cases</li>
+        <li><strong>The Himalayan Times</strong> &mdash; CIAA 2025 Review</li>
+        <li><strong>Fiscal Nepal</strong> &mdash; Airport, CIAA Cases</li>
+        <li><strong>myRepublica</strong> &mdash; Lalita Niwas Coverage</li>
+        <li><strong>Khabarhub English</strong> &mdash; Basnet, Gurung Cases</li>
+      </ul>
+    </div>
+    <div class="src-card">
+      <h4 class="en-t">Official Records</h4>
+      <h4 class="ne-t" style="display:none">आधिकारिक अभिलेख</h4>
+      <ul class="src-list">
+        <li><strong>CIAA Annual Report 2023–24</strong></li>
+        <li><strong>CIAA Special Court Filing</strong> (Dec 2025)</li>
+        <li><strong>Kathmandu District Court</strong> &mdash; Refugee Case</li>
+        <li><strong>Nepal Special Court</strong> &mdash; Lalita Niwas</li>
+        <li><strong>Wikipedia</strong> (verified citations only)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="disclaimer fadein">
+    <strong class="en-t">Editorial &amp; Legal Disclaimer</strong>
+    <strong class="ne-t" style="display:none">सम्पादकीय र कानुनी अस्वीकरण</strong>
+    <span class="en-t">This website compiles information exclusively from credible primary sources: The Kathmandu Post, Al Jazeera, OCCRP, The Diplomat, Foreign Policy, The Himalayan Times, Fiscal Nepal, myRepublica, Khabarhub English, Transparency International, and official CIAA and court filings. "Accused" refers to CIAA or prosecution filings. "Convicted" refers to Special Court or District Court verdicts. No social media claims, anonymous allegations, or partisan blogs are cited here. All source links are provided for independent verification.</span>
+    <span class="ne-t" style="display:none">यो वेबसाइटले विश्वसनीय प्राथमिक स्रोतहरूबाट मात्र सूचना संकलन गर्छ। "अभियुक्त" भन्नाले CIAA वा सरकारी अभियोजन दर्ता मुद्दा बुझिन्छ। "दोषी" भन्नाले अदालतको फैसला हो।</span>
+    <br><br>
+    <span style="color:var(--ink-4)">contact@khulasa.press &nbsp;&middot;&nbsp; February 2026</span>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="ft-brand">Khulasa.press &mdash; <span class="en-t">The People Know</span><span class="ne-t" style="display:none">जनता जान्छन्</span></div>
+  <div class="ft-note">February 2026 &nbsp;&middot;&nbsp; All sources verified and open &nbsp;&middot;&nbsp; No rumours, no speculation</div>
+</footer>
+
+</div><!-- /#site-wrap -->
+
+<!-- ═══════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════ -->
+<script>
+/* ══════════════════════════════════════
+   AUDIO ENGINE — audio.mp3
+   Pool of 6 instances so clicks never
+   cut each other off. Place audio.mp3
+   in the SAME folder as this HTML file.
+══════════════════════════════════════ */
+const GOAT_SRC  = 'audio.mp3';
+const POOL_SIZE = 6;
+let pool        = [];
+let poolIdx     = 0;
+let poolReady   = false;
+
+function initAudioPool() {
+  if (poolReady) return;
+  poolReady = true;
+  for (let i = 0; i < POOL_SIZE; i++) {
+    const a   = new Audio(GOAT_SRC);
+    a.preload = 'auto';
+    a.volume  = 0.85;
+    pool.push(a);
+  }
+}
+
+function playGoat() {
+  try {
+    initAudioPool();
+    const snd        = pool[poolIdx % POOL_SIZE];
+    poolIdx++;
+    snd.playbackRate = 0.86 + Math.random() * 0.28; // slight pitch variety
+    snd.currentTime  = 0;
+    snd.play().catch(() => {});
+  } catch(e) {}
+}
+
+/* ══ Click pop text burst ══ */
+const POP_WORDS = ['BAA!', 'BLEAT!', 'NAAA!', 'MEH!', 'BLAAA!', 'BAA BAA!'];
+
+function spawnPop(x, y, dx, dy) {
+  const el       = document.createElement('div');
+  el.className   = 'g-pop';
+  el.textContent = POP_WORDS[Math.floor(Math.random() * POP_WORDS.length)];
+  el.style.left  = (x + (dx || 0) - 22) + 'px';
+  el.style.top   = (y + (dy || 0) - 22) + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 680);
+}
+
+/* ══════════════════════════════════════
+   LANGUAGE SYSTEM
+══════════════════════════════════════ */
+let currentLang = 'en';
+
+function chooseLang(lang) {
+  currentLang = lang;
+  applyLang(lang);
+  document.getElementById('lang-overlay').classList.add('hidden');
+  document.getElementById('site-wrap').classList.add('visible');
+  /* play goat on load after language chosen */
+  setTimeout(() => { playGoat(); }, 300);
+  setTimeout(() => { playGoat(); }, 700);
+  setTimeout(() => { playGoat(); }, 1100);
+}
+
+function applyLang(lang) {
+  const html = document.getElementById('html-root');
+  html.setAttribute('lang', lang);
+
+  /* Show/hide language-specific elements */
+  document.querySelectorAll('.en-t').forEach(el => {
+    el.style.display = lang === 'en' ? '' : 'none';
+  });
+  document.querySelectorAll('.ne-t').forEach(el => {
+    el.style.display = lang === 'ne' ? '' : 'none';
+  });
+
+  /* Update lang-toggle label */
+  const btn = document.getElementById('lang-toggle');
+  btn.textContent = lang === 'en' ? 'नेपाली' : 'English';
+
+  /* Update ticker label */
+  const tkLabel = document.querySelector('.tk-label');
+  if (tkLabel) tkLabel.textContent = lang === 'en' ? 'Breaking' : 'ताजा समाचार';
+}
+
+function toggleLang() {
+  playGoat();
+  const next = currentLang === 'en' ? 'ne' : 'en';
+  chooseLang(next);
+  document.getElementById('lang-overlay').classList.add('hidden');
+  document.getElementById('site-wrap').classList.add('visible');
+}
+
+/* ══════════════════════════════════════
+   EVERY CLICK = GOAT SOUND + POP
+══════════════════════════════════════ */
+document.addEventListener('click', e => {
+  playGoat();
+  spawnPop(e.clientX, e.clientY);
+  /* two extra pops with offset */
+  setTimeout(() => spawnPop(
+    e.clientX, e.clientY,
+    (Math.random() - 0.5) * 60,
+    (Math.random() - 0.5) * 40
+  ), 75);
+  setTimeout(() => spawnPop(
+    e.clientX, e.clientY,
+    (Math.random() - 0.5) * 80,
+    (Math.random() - 0.5) * 50
+  ), 150);
+}, true); /* useCapture = true catches ALL clicks including on buttons */
+
+/* ══════════════════════════════════════
+   HOVER SOUND on interactive elements
+══════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const hoverSels = [
+    '.case-card', '.sm-card', '.sp-cell', '.tl-item',
+    '.bar-row', '.pullquote', '.sec-head', '.hero-h1',
+    '.db-num', '.alert-band', '.ticker-bar', '.mh-logo',
+    '.cc-h3', '.stat-inline', '.lo-btn'
+  ];
+  document.querySelectorAll(hoverSels.join(',')).forEach(el => {
+    el.addEventListener('mouseenter', () => playGoat());
+  });
+});
+
+/* ══════════════════════════════════════
+   COUNTER ANIMATION
+══════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      const el     = en.target;
+      const target = parseInt(el.dataset.count) || 0;
+      const pre    = el.dataset.prefix || '';
+      const suf    = el.dataset.suffix || '';
+      const dur    = 1800;
+      const start  = performance.now();
+      (function tick(now) {
+        const p    = Math.min((now - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 4);
+        el.textContent = pre + Math.round(ease * target).toLocaleString() + suf;
+        if (p < 1) requestAnimationFrame(tick);
+      })(start);
+      obs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-count]').forEach(el => obs.observe(el));
+});
+
+/* ══════════════════════════════════════
+   SCROLL FADE-IN
+══════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((en, i) => {
+      if (en.isIntersecting) {
+        setTimeout(() => en.target.classList.add('visible'), (i % 4) * 55);
+        obs.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.fadein').forEach(el => obs.observe(el));
+});
+</script>
+</body>
+</html>
