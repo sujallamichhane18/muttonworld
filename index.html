@@ -1608,7 +1608,7 @@ a { color: inherit; text-decoration: none; }
     <strong>Editorial and Legal Disclaimer</strong>
     This website compiles information exclusively from credible primary sources: The Kathmandu Post, Al Jazeera, OCCRP, The Diplomat, Foreign Policy, The Himalayan Times, Fiscal Nepal, myRepublica, Khabarhub English, Nepal News, Wikipedia (verified citations), Transparency International, and official CIAA and court filings. "Accused" refers to CIAA or government prosecution filings. "Convicted" refers to Special Court or District Court verdicts. No social media claims, anonymous allegations, or partisan blog posts are cited here. All source links are provided for independent verification.
     <br><br>
-    <span style="color:var(--ink-4)">Have verified evidence? contact@truthnepal.org &nbsp;&middot;&nbsp; February 2026</span>
+    <span style="color:var(--ink-4)">Have verified evidence? <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="15767a7b6174766155616760617d7b706574793b7a6772">[email&#160;protected]</a> &nbsp;&middot;&nbsp; February 2026</span>
   </div>
 
 </div>
@@ -1619,63 +1619,40 @@ a { color: inherit; text-decoration: none; }
 </footer>
 
 <!-- ═══════════════ SCRIPTS ═══════════════ -->
-<script>
-/* ══ Web Audio Goat Engine ══ */
-let actx;
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ══ Goat Audio Engine — audio.mp3 ══
+   Place audio.mp3 in the same folder as this HTML file.
+   The pool of 5 Audio instances lets overlapping bleats play
+   without cutting each other off.
+══════════════════════════════════════ */
+const GOAT_SRC = 'audio.mp3';   // <-- change filename here if needed
+const POOL_SIZE = 5;
+let audioPool = [];
+let poolIdx = 0;
+let audioUnlocked = false;
 
-function ensureAudio() {
-  if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
-  if (actx.state === 'suspended') actx.resume();
+/* Pre-load the pool once user interacts (browser autoplay policy) */
+function initPool() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  for (let i = 0; i < POOL_SIZE; i++) {
+    const a = new Audio(GOAT_SRC);
+    a.preload = 'auto';
+    a.volume  = 0.82;
+    audioPool.push(a);
+  }
 }
 
-function playGoat(type) {
+function playGoat() {
   try {
-    ensureAudio();
-    const t = actx.currentTime;
-    const dur = type === 'long' ? 0.70 : type === 'hi' ? 0.36 : 0.46;
-    const base = type === 'hi' ? 380 : type === 'low' ? 240 : 305;
-
-    const osc = actx.createOscillator();
-    const gain = actx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(base, t);
-    osc.frequency.exponentialRampToValueAtTime(base * 0.84, t + 0.09);
-    osc.frequency.exponentialRampToValueAtTime(base * 1.11, t + 0.28);
-    osc.frequency.exponentialRampToValueAtTime(base * 0.78, t + dur);
-
-    const lfo = actx.createOscillator();
-    const lfoG = actx.createGain();
-    lfo.frequency.value = 9 + Math.random() * 6;
-    lfoG.gain.value = 20;
-    lfo.connect(lfoG);
-    lfoG.connect(osc.frequency);
-
-    const bpf = actx.createBiquadFilter();
-    bpf.type = 'bandpass';
-    bpf.frequency.value = 720;
-    bpf.Q.value = 2.6;
-
-    gain.gain.setValueAtTime(0.001, t);
-    gain.gain.exponentialRampToValueAtTime(0.14, t + 0.04);
-    gain.gain.setValueAtTime(0.14, t + dur * 0.55);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
-
-    const osc2 = actx.createOscillator();
-    const gain2 = actx.createGain();
-    osc2.type = 'triangle';
-    osc2.frequency.setValueAtTime(base * 1.55, t);
-    osc2.frequency.exponentialRampToValueAtTime(base * 1.2, t + dur);
-    gain2.gain.setValueAtTime(0.001, t);
-    gain2.gain.exponentialRampToValueAtTime(0.045, t + 0.06);
-    gain2.gain.exponentialRampToValueAtTime(0.001, t + dur);
-
-    osc.connect(bpf);
-    bpf.connect(gain);
-    gain.connect(actx.destination);
-    osc2.connect(gain2);
-    gain2.connect(actx.destination);
-
-    [osc, osc2, lfo].forEach(o => { o.start(t); o.stop(t + dur + 0.06); });
+    initPool();
+    if (!audioPool.length) return;
+    const snd = audioPool[poolIdx % POOL_SIZE];
+    poolIdx++;
+    /* slight random pitch shift via playbackRate for variety */
+    snd.playbackRate = 0.88 + Math.random() * 0.26;
+    snd.currentTime  = 0;
+    snd.play().catch(() => {});
   } catch(e) {}
 }
 
@@ -1695,10 +1672,10 @@ function spawnPop(x, y) {
 /* ══ Page load goat ══ */
 window.addEventListener('load', () => {
   setTimeout(() => {
-    playGoat('long');
-    setTimeout(() => playGoat('hi'), 400);
-    setTimeout(() => playGoat('mid'), 750);
-  }, 600);
+    playGoat();
+    setTimeout(() => playGoat(), 480);
+    setTimeout(() => playGoat(), 900);
+  }, 700);
 });
 
 /* ══ Hover sound ══ */
@@ -1710,14 +1687,13 @@ document.addEventListener('DOMContentLoaded', () => {
   );
   targets.forEach(el => {
     el.addEventListener('mouseenter', () => {
-      const t = ['hi','low','mid'][Math.floor(Math.random()*3)];
-      playGoat(t);
+      playGoat();
     });
   });
 
   /* Click anywhere = goat burst */
   document.addEventListener('click', e => {
-    playGoat('long');
+    playGoat();
     spawnPop(e.clientX, e.clientY);
     setTimeout(() => spawnPop(
       e.clientX + (Math.random()-0.5)*50,
@@ -1758,14 +1734,4 @@ document.addEventListener('DOMContentLoaded', () => {
   const obs = new IntersectionObserver(entries => {
     entries.forEach((en, i) => {
       if (en.isIntersecting) {
-        setTimeout(() => en.target.classList.add('visible'), (i % 4) * 55);
-        obs.unobserve(en.target);
-      }
-    });
-  }, { threshold: 0.07 });
-  document.querySelectorAll('.fadein').forEach(el => obs.observe(el));
-});
-</script>
-
-</body>
-</html>
+        setTimeout(()
