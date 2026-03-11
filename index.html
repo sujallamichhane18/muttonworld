@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Khulasa.press — Nepal Congress Accountability Record 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/lucide-static@latest/font/lucide.css" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <style>
 /* ═══════════════════════ RESET & TOKENS ═══════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -357,10 +359,367 @@ a{color:inherit;text-decoration:none;}
   .loss-row{grid-template-columns:140px 1fr 70px;}
   .footer{padding:22px 20px;}
   .lo-btns{flex-direction:column;}.lo-btn{padding:14px 36px;font-size:18px;}
+  .float-toc{display:none!important;}
+  .search-overlay .so-inner{width:96%;padding:30px 20px;}
 }
+
+/* ═══════════════════════ READING PROGRESS BAR ═══════════════════════ */
+#read-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--red),#FF4D4D,var(--red-dark));z-index:99999;width:0;transition:width 60ms linear;box-shadow:0 0 8px rgba(196,19,26,.5);}
+
+/* ═══════════════════════ DARK MODE ═══════════════════════ */
+.dark{--white:#0D0D0F;--paper:#15151A;--paper-2:#1C1C24;--ink:#E8E6E0;--ink-2:#C8C4BC;--ink-3:#918D85;--ink-4:#6B675F;
+  --rule:#2A2A34;--rule-2:#3A3A44;--red:#FF3B3B;--red-dark:#CC2020;--red-pale:rgba(255,59,59,.1);--red-mid:rgba(255,59,59,.18);
+  --gold:#D4A000;--green:#22C55E;}
+.dark body{background:var(--white);}
+.dark .masthead{background:var(--white);border-bottom-color:var(--rule-2);}
+.dark .case-card,.dark .sm-card,.dark .src-card,.dark .tl-wrap,.dark .ev-doc{background:var(--paper);border-color:var(--rule-2);}
+.dark .cc-top,.dark .cc-foot,.dark .sp-cell,.dark .stat-panel{background:var(--paper-2);border-color:var(--rule);}
+.dark .sp-head,.dark .tl-head,.dark .ticker-bar{background:#0A0A0C;}
+.dark .alert-band{background:var(--red-dark);}
+.dark .pullquote{background:var(--paper-2);border-color:var(--rule);}
+.dark .disclaimer{background:var(--paper-2);border-color:var(--rule);}
+.dark .data-band{background:var(--paper-2);border-color:var(--rule);}
+.dark .hero-h1 .dim{color:var(--ink-3);}
+.dark .filter-btn{background:var(--paper);border-color:var(--rule-2);color:var(--ink-3);}
+.dark .filter-btn.active,.dark .filter-btn:hover{background:var(--ink);color:var(--white);border-color:var(--ink);}
+.dark .bar-track,.dark .loss-track{background:var(--rule);}
+.dark .ev-chain{background:var(--paper-2);}
+.dark .stat-inline{background:rgba(255,59,59,.08);}
+.dark .stat-inline.gold{background:rgba(212,160,0,.08);}
+.dark .stat-inline.green{background:rgba(34,197,94,.08);}
+.dark .cc-text .update-note{background:rgba(255,59,59,.06);}
+.dark .footer{background:#0A0A0C;}
+.dark .sm-card:hover,.dark .case-card:hover{box-shadow:0 8px 48px rgba(0,0,0,.4);}
+.dark #lang-overlay{background:#0A0A0C;}
+.dark .lo-btn.en{border-color:rgba(255,255,255,.15);}
+
+/* ═══════════════════════ DARK MODE TOGGLE ═══════════════════════ */
+#dark-toggle{font-family:var(--f-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;background:transparent;border:1px solid var(--rule-2);color:var(--ink-3);padding:4px 10px;cursor:pointer;transition:all .2s;outline:none;display:flex;align-items:center;gap:5px;}
+#dark-toggle:hover{border-color:var(--red);color:var(--red);}
+#dark-toggle .moon,#dark-toggle .sun{font-size:11px;line-height:1;}
+
+/* ═══════════════════════ SEARCH OVERLAY ═══════════════════════ */
+.search-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:99990;display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;}
+.search-overlay.open{opacity:1;visibility:visible;}
+.so-inner{width:680px;background:var(--white);border:1px solid var(--rule-2);box-shadow:0 24px 80px rgba(0,0,0,.3);overflow:hidden;}
+.so-input-wrap{display:flex;align-items:center;border-bottom:2px solid var(--red);padding:0 20px;}
+.so-input-wrap svg{width:18px;height:18px;stroke:var(--ink-3);flex-shrink:0;}
+.so-input{flex:1;font-family:var(--f-body);font-size:18px;padding:18px 14px;border:none;background:transparent;color:var(--ink);outline:none;}
+.so-input::placeholder{color:var(--ink-4);}
+.so-hint{font-family:var(--f-mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-4);padding:4px 8px;border:1px solid var(--rule-2);flex-shrink:0;}
+.so-results{max-height:50vh;overflow-y:auto;padding:8px 0;}
+.so-result{display:block;padding:14px 22px;border-bottom:1px solid var(--rule);cursor:pointer;transition:background .12s;text-decoration:none;color:inherit;}
+.so-result:hover,.so-result.active{background:var(--red-pale);}
+.so-result-title{font-family:var(--f-head);font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.so-result-meta{font-family:var(--f-mono);font-size:9px;color:var(--red);letter-spacing:.06em;}
+.so-result-match{font-family:var(--f-mono);font-size:10px;color:var(--ink-3);margin-top:3px;}
+.so-result-match mark{background:rgba(196,19,26,.15);color:var(--red);padding:0 2px;font-weight:700;}
+.so-empty{padding:30px 22px;text-align:center;font-family:var(--f-mono);font-size:11px;color:var(--ink-4);}
+.so-footer{padding:10px 20px;border-top:1px solid var(--rule);display:flex;gap:16px;background:var(--paper);}
+.so-footer span{font-family:var(--f-mono);font-size:8px;color:var(--ink-4);letter-spacing:.08em;display:flex;align-items:center;gap:4px;}
+.so-footer kbd{display:inline-block;font-family:var(--f-mono);font-size:8px;background:var(--white);border:1px solid var(--rule-2);padding:1px 5px;border-radius:2px;color:var(--ink-3);}
+
+/* ═══════════════════════ FLOATING TOC ═══════════════════════ */
+.float-toc{position:fixed;right:28px;top:50%;transform:translateY(-50%);z-index:890;display:flex;flex-direction:column;gap:6px;opacity:0;transition:opacity .4s;pointer-events:none;}
+.float-toc.visible{opacity:1;pointer-events:auto;}
+.ft-dot{width:10px;height:10px;border:1.5px solid var(--rule-2);border-radius:50%;cursor:pointer;transition:all .22s;position:relative;}
+.ft-dot:hover,.ft-dot.active{background:var(--red);border-color:var(--red);transform:scale(1.3);}
+.ft-dot::after{content:attr(data-label);position:absolute;right:20px;top:50%;transform:translateY(-50%);font-family:var(--f-mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap;opacity:0;transition:opacity .18s;pointer-events:none;background:var(--white);border:1px solid var(--rule-2);padding:3px 8px;}
+.ft-dot:hover::after{opacity:1;}
+
+/* ═══════════════════════ BACK TO TOP ═══════════════════════ */
+#back-top{position:fixed;bottom:28px;right:28px;width:42px;height:42px;background:var(--ink);color:#fff;border:none;cursor:pointer;z-index:890;display:flex;align-items:center;justify-content:center;font-size:16px;opacity:0;transform:translateY(16px);transition:opacity .3s,transform .3s,background .2s;pointer-events:none;}
+#back-top.visible{opacity:1;transform:translateY(0);pointer-events:auto;}
+#back-top:hover{background:var(--red);}
+
+/* ═══════════════════════ KEYBOARD HINT ═══════════════════════ */
+.kb-hint{position:fixed;bottom:28px;left:28px;z-index:890;display:flex;gap:8px;opacity:0;transition:opacity .5s;}
+.kb-hint.visible{opacity:1;}
+.kb-key{font-family:var(--f-mono);font-size:8px;letter-spacing:.08em;color:var(--ink-4);background:var(--paper);border:1px solid var(--rule-2);padding:3px 7px;display:inline-flex;align-items:center;gap:4px;}
+.kb-key kbd{font-family:inherit;background:var(--white);border:1px solid var(--rule-2);padding:1px 4px;border-radius:2px;font-weight:700;color:var(--ink-3);}
+
+/* ═══════════════════════ PARTICLE CANVAS ═══════════════════════ */
+#particles{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.35;}
+.dark #particles{opacity:.2;}
+
+/* ═══════════════════════ SEARCH BTN IN NAV ═══════════════════════ */
+#search-btn{font-family:var(--f-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;background:transparent;border:1px solid var(--rule-2);color:var(--ink-3);padding:4px 10px;cursor:pointer;transition:all .2s;outline:none;display:flex;align-items:center;gap:5px;}
+#search-btn:hover{border-color:var(--red);color:var(--red);}
+#search-btn svg{width:12px;height:12px;stroke:currentColor;}
+
+/* ═══════════════════════ CORRUPTION METER ═══════════════════════ */
+.corruption-meter{display:flex;align-items:center;justify-content:center;gap:50px;margin:40px 0 20px;flex-wrap:wrap;}
+.cm-ring{position:relative;width:160px;height:160px;}
+.cm-ring svg{transform:rotate(-90deg);}
+.cm-ring circle{fill:none;stroke-width:8;stroke-linecap:round;}
+.cm-ring .track{stroke:var(--rule);}
+.cm-ring .fill{stroke:var(--red);stroke-dasharray:440;stroke-dashoffset:440;transition:stroke-dashoffset 2s cubic-bezier(.16,1,.3,1);}
+.cm-ring .fill.gold{stroke:var(--gold);}
+.cm-ring .fill.green{stroke:var(--green);}
+.cm-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.cm-val{font-family:var(--f-head);font-size:36px;font-weight:900;color:var(--red);line-height:1;}
+.cm-label{font-family:var(--f-mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-top:4px;text-align:center;line-height:1.5;}
+
+/* ═══════════════════════ TYPEWRITER ═══════════════════════ */
+.tw-cursor{display:inline-block;width:3px;height:.85em;background:var(--red);margin-left:3px;animation:bl .8s step-end infinite;vertical-align:text-bottom;}
+
+/* ═══════════════════════ SHARE BUTTON ═══════════════════════ */
+.share-btn{font-family:var(--f-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;background:var(--red);border:none;color:#fff;padding:5px 12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
+.share-btn:hover{background:var(--red-dark);transform:translateY(-1px);}
+.share-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;padding:10px 22px;z-index:99999;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;}
+.share-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ═══════════════════════ GLITCH EFFECT (hero) ═══════════════════════ */
+@keyframes glitch1{0%,100%{clip-path:inset(0 0 95% 0)}20%{clip-path:inset(30% 0 50% 0)}40%{clip-path:inset(70% 0 5% 0)}60%{clip-path:inset(10% 0 80% 0)}80%{clip-path:inset(55% 0 25% 0)}}
+@keyframes glitch2{0%,100%{clip-path:inset(95% 0 0 0)}20%{clip-path:inset(50% 0 30% 0)}40%{clip-path:inset(5% 0 70% 0)}60%{clip-path:inset(80% 0 10% 0)}80%{clip-path:inset(25% 0 55% 0)}}
+.hero-h1{position:relative;}
+.hero-h1:hover::before,.hero-h1:hover::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+.hero-h1:hover::before{color:var(--red);animation:glitch1 .3s linear;z-index:-1;transform:translateX(-2px);}
+.hero-h1:hover::after{color:var(--gold);animation:glitch2 .3s linear;z-index:-1;transform:translateX(2px);}
+
+/* ═══════════════════════ ENHANCED CARD HOVER ═══════════════════════ */
+.case-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(196,19,26,.03) 0%,transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none;}
+.case-card:hover::after{opacity:1;}
+
+/* ═══════════════════════ SECTION COUNTER ANIMATION ═══════════════════════ */
+.sh-num{transition:color .3s,transform .3s;}
+.sec-head:hover .sh-num{color:var(--red);transform:scale(1.15);}
+.sec-head:hover .sh-rule{width:50px;background:var(--red);}
+.sh-rule{transition:width .3s,background .3s;}
+
+/* ═══════════════════════ PRINT ═══════════════════════ */
+@media print{
+  .ticker-bar,.masthead,.alert-band,.float-toc,.kb-hint,#back-top,#read-progress,#particles,.filter-bar,.lo-btns,.mh-right,.share-btn,.search-overlay{display:none!important;}
+  body{font-size:11pt;color:#000;}
+  .case-card,.sm-card{break-inside:avoid;box-shadow:none;border:1px solid #ccc;}
+  .hero-h1{font-size:36pt;}
+  .data-band{background:#f5f5f5;}
+}
+
+/* ═══════════════════════ 120Hz LIQUID ANIMATIONS ═══════════════════════ */
+@keyframes morphBlob1{
+  0%,100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%}
+  25%{border-radius:30% 60% 70% 40%/50% 60% 30% 60%}
+  50%{border-radius:50% 60% 30% 60%/30% 60% 70% 40%}
+  75%{border-radius:60% 40% 60% 30%/60% 30% 40% 70%}
+}
+@keyframes morphBlob2{
+  0%,100%{border-radius:40% 60% 70% 30%/40% 50% 50% 60%}
+  33%{border-radius:70% 30% 50% 50%/30% 60% 40% 70%}
+  66%{border-radius:30% 60% 40% 70%/70% 40% 60% 30%}
+}
+@keyframes liquidFlow{
+  0%{transform:translate(0,0) rotate(0deg) scale(1)}
+  25%{transform:translate(30px,-50px) rotate(90deg) scale(1.1)}
+  50%{transform:translate(-20px,20px) rotate(180deg) scale(.95)}
+  75%{transform:translate(50px,-10px) rotate(270deg) scale(1.05)}
+  100%{transform:translate(0,0) rotate(360deg) scale(1)}
+}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes gradientFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes floatUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+@keyframes rippleOut{0%{transform:scale(0);opacity:.6}100%{transform:scale(4);opacity:0}}
+@keyframes borderDance{0%{background-position:0% 0%}100%{background-position:300% 0%}}
+@keyframes textGlow{0%,100%{text-shadow:0 0 20px rgba(196,19,26,.3)}50%{text-shadow:0 0 40px rgba(196,19,26,.6),0 0 80px rgba(196,19,26,.2)}}
+@keyframes iconFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+@keyframes orbitFloat{0%{transform:rotate(0deg) translateX(15px) rotate(0deg)}100%{transform:rotate(360deg) translateX(15px) rotate(-360deg)}}
+@keyframes waveFlow{0%{d:path('M0,50 Q25,30 50,50 T100,50 V100 H0 Z')}50%{d:path('M0,50 Q25,70 50,50 T100,50 V100 H0 Z')}100%{d:path('M0,50 Q25,30 50,50 T100,50 V100 H0 Z')}}
+@keyframes entranceScale{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes rotateIn{from{opacity:0;transform:rotate(-10deg) scale(.9)}to{opacity:1;transform:rotate(0deg) scale(1)}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes bounceIn{0%{opacity:0;transform:scale(.3)}50%{transform:scale(1.05)}70%{transform:scale(.95)}100%{opacity:1;transform:scale(1)}}
+@keyframes glow120{0%,100%{box-shadow:0 0 5px rgba(196,19,26,.2),0 0 20px rgba(196,19,26,.1)}50%{box-shadow:0 0 20px rgba(196,19,26,.4),0 0 60px rgba(196,19,26,.15)}}
+
+/* ═══════════ LIQUID BLOBS ═══════════ */
+.liquid-blob{position:absolute;filter:blur(80px);opacity:.12;pointer-events:none;z-index:0;will-change:transform,border-radius;}
+.blob-1{width:500px;height:500px;background:var(--red);top:-100px;right:-150px;animation:morphBlob1 20s ease-in-out infinite,floatUp 8s ease-in-out infinite;}
+.blob-2{width:400px;height:400px;background:var(--gold);bottom:-50px;left:-100px;animation:morphBlob2 25s ease-in-out infinite,floatUp 10s ease-in-out infinite 2s;}
+.blob-3{width:300px;height:300px;background:linear-gradient(135deg,var(--red),var(--gold));top:40%;left:50%;animation:morphBlob1 18s ease-in-out infinite reverse,liquidFlow 30s ease-in-out infinite;}
+.hero{position:relative;overflow:hidden;}
+
+/* ═══════════ CURSOR TRAIL ═══════════ */
+.cursor-dot{position:fixed;width:8px;height:8px;background:var(--red);border-radius:50%;pointer-events:none;z-index:99997;mix-blend-mode:difference;transition:width .3s cubic-bezier(.23,1,.32,1),height .3s cubic-bezier(.23,1,.32,1),background .3s;will-change:transform;transform:translate(-50%,-50%);}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid var(--red);border-radius:50%;pointer-events:none;z-index:99996;opacity:.4;transition:width .3s cubic-bezier(.23,1,.32,1),height .3s cubic-bezier(.23,1,.32,1),opacity .3s,border-color .3s;will-change:transform;transform:translate(-50%,-50%);}
+.cursor-dot.hovering{width:40px;height:40px;background:rgba(196,19,26,.15);mix-blend-mode:normal;}
+.cursor-ring.hovering{width:60px;height:60px;border-color:var(--red);opacity:.7;}
+@media(hover:none){.cursor-dot,.cursor-ring{display:none!important;}}
+@media(max-width:960px){.liquid-blob{display:none;}.cursor-dot,.cursor-ring{display:none!important;}}
+
+/* ═══════════ ANIMATED GRADIENT BORDERS ═══════════ */
+.case-card::before{background:linear-gradient(90deg,var(--red),var(--gold),var(--green),var(--red));background-size:300% 100%;animation:borderDance 4s linear infinite;}
+.sm-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--gold),var(--green),var(--red));background-size:300% 100%;animation:borderDance 4s linear infinite;opacity:0;transition:opacity .3s;}
+.sm-card:hover::after{opacity:1;}
+
+/* ═══════════ ICON STYLES ═══════════ */
+.icon{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.icon svg{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nav-icon{width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:5px;opacity:.6;transition:opacity .2s,transform .3s cubic-bezier(.34,1.56,.64,1);}
+a:hover .nav-icon,button:hover .nav-icon{opacity:1;transform:scale(1.15);}
+.section-icon{width:24px;height:24px;stroke:var(--red);flex-shrink:0;transition:transform .3s cubic-bezier(.34,1.56,.64,1);}
+.sec-head:hover .section-icon{transform:rotate(10deg) scale(1.15);}
+.stat-icon{width:20px;height:20px;stroke:var(--red);margin-bottom:4px;opacity:.5;}
+.badge-icon{width:12px;height:12px;margin-right:3px;vertical-align:middle;}
+.card-icon{width:18px;height:18px;margin-right:8px;opacity:.7;transition:all .25s;}
+.case-card:hover .card-icon,.sm-card:hover .card-icon{opacity:1;transform:scale(1.1);}
+
+/* ═══════════ HERO TITLE LIQUID GRADIENT ═══════════ */
+.hero-h1 .acc{background:linear-gradient(135deg,var(--red),#FF6B6B,var(--red-dark),var(--red));background-size:300% 300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gradientFlow 4s ease infinite;}
+
+/* ═══════════ GLASSMORPHISM ═══════════ */
+.stat-panel{background:rgba(244,242,237,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+.dark .stat-panel{background:rgba(21,21,26,.85);}
+.masthead{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(250,250,248,.92)!important;}
+.dark .masthead{background:rgba(13,13,15,.92)!important;}
+
+/* ═══════════ ENHANCED HOVER UNDERLINES ═══════════ */
+.mh-nav a{position:relative;}
+.mh-nav a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;background:var(--red);transition:width .3s cubic-bezier(.23,1,.32,1);}
+.mh-nav a:hover::after{width:100%;}
+.mh-nav a:hover{border-bottom-color:transparent;}
+
+/* ═══════════ BUTTON EFFECTS ═══════════ */
+.lo-btn,.filter-btn,.share-btn,#dark-toggle,#lang-toggle,#search-btn{position:relative;overflow:hidden;}
+.lo-btn::after,.filter-btn::after,.share-btn::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.15) 0%,transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none;}
+.lo-btn:hover::after,.filter-btn:hover::after,.share-btn:hover::after{opacity:1;}
+
+/* ═══════════ RIPPLE EFFECT ═══════════ */
+.ripple-effect{position:absolute;border-radius:50%;background:rgba(196,19,26,.12);animation:rippleOut .6s ease-out forwards;pointer-events:none;}
+
+/* ═══════════ SHIMMER ON NUMBERS ═══════════ */
+.sp-n,.si-n,.cm-val{position:relative;}
+.sp-n::after,.si-n::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent 0%,rgba(196,19,26,.08) 50%,transparent 100%);background-size:200% 100%;animation:shimmer 3s ease-in-out infinite;pointer-events:none;}
+
+/* ═══════════ TICKER GLOW ═══════════ */
+.ticker-bar{box-shadow:0 2px 20px rgba(0,0,0,.3);}
+.tk-label{position:relative;overflow:hidden;}
+.tk-label::after{content:'';position:absolute;top:0;left:-100%;width:200%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);animation:shimmer 3s ease-in-out infinite;}
+
+/* ═══════════ ALERT BAND ENHANCED ═══════════ */
+.alert-band{position:relative;overflow:hidden;}
+.alert-band::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.04),transparent);animation:shimmer 4s ease-in-out infinite;pointer-events:none;}
+
+/* ═══════════ LIVE BADGE ENHANCED ═══════════ */
+.live-badge{position:relative;overflow:hidden;}
+.live-badge::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:shimmer 2s ease-in-out infinite;}
+
+/* ═══════════ FOOTER GRADIENT LINE ═══════════ */
+.footer{position:relative;overflow:hidden;}
+.footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--gold),var(--green),var(--red));background-size:300% 100%;animation:borderDance 4s linear infinite;}
+
+/* ═══════════ PROGRESS BAR 120Hz ═══════════ */
+#read-progress{transition:width 8ms linear;background:linear-gradient(90deg,var(--red),#FF4D4D,var(--gold),var(--red));background-size:300% 100%;animation:borderDance 3s linear infinite;}
+
+/* ═══════════ ENHANCED CARD HOVERS ═══════════ */
+.case-card{transform-style:preserve-3d;transition:box-shadow .35s cubic-bezier(.23,1,.32,1),transform .35s cubic-bezier(.23,1,.32,1);}
+.case-card:hover{box-shadow:0 20px 60px rgba(196,19,26,.12),0 0 0 1px rgba(196,19,26,.08);}
+.sm-card{transform-style:preserve-3d;transition:box-shadow .35s cubic-bezier(.23,1,.32,1),transform .35s cubic-bezier(.23,1,.32,1);}
+.sm-card:hover{box-shadow:0 12px 40px rgba(196,19,26,.10),0 0 0 1px rgba(196,19,26,.06);}
+
+/* ═══════════ DATA BAND LIQUID BG ═══════════ */
+.data-band{position:relative;overflow:hidden;}
+.data-band::before{content:'';position:absolute;width:600px;height:600px;top:-200px;right:-200px;background:var(--red);opacity:.03;filter:blur(100px);animation:morphBlob1 25s ease-in-out infinite;pointer-events:none;}
+.data-band::after{content:'';position:absolute;width:400px;height:400px;bottom:-150px;left:-100px;background:var(--gold);opacity:.03;filter:blur(80px);animation:morphBlob2 20s ease-in-out infinite;pointer-events:none;}
+
+/* ═══════════ PULLQUOTE GRADIENT LINE ═══════════ */
+.pullquote::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--red),var(--gold),var(--red));background-size:100% 200%;animation:gradientFlow 3s ease infinite;}
+
+/* ═══════════ SEC NUM GLOW ═══════════ */
+.sec-head:hover .sh-num{text-shadow:0 0 20px rgba(196,19,26,.5);}
+
+/* ═══════════ PROOF LINK HOVER ═══════════ */
+.proof-link{transition:all .25s cubic-bezier(.23,1,.32,1);}
+.proof-link:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(196,19,26,.1);}
+
+/* ═══════════ WAVE SVG SECTION ═══════════ */
+.wave-divider{position:relative;height:80px;overflow:hidden;margin:-1px 0;}
+.wave-divider svg{position:absolute;bottom:0;width:100%;height:80px;}
+.wave-divider .wave-path{fill:var(--paper);animation:waveFlow 6s ease-in-out infinite;}
+.dark .wave-divider .wave-path{fill:var(--paper-2);}
+
+/* ═══════════ ENTRANCE ANIMATIONS ═══════════ */
+.entrance-scale{animation:entranceScale .6s cubic-bezier(.23,1,.32,1) both;}
+.entrance-rotate{animation:rotateIn .5s cubic-bezier(.23,1,.32,1) both;}
+.entrance-left{animation:slideInLeft .5s cubic-bezier(.23,1,.32,1) both;}
+.entrance-right{animation:slideInRight .5s cubic-bezier(.23,1,.32,1) both;}
+.entrance-bounce{animation:bounceIn .6s cubic-bezier(.23,1,.32,1) both;}
+
+/* ═══════════ FLOATING DECORATIVE ICONS ═══════════ */
+.float-decor{position:absolute;pointer-events:none;opacity:.04;z-index:0;animation:floatUp 6s ease-in-out infinite;}
+.float-decor:nth-child(2){animation-delay:2s;}
+.float-decor:nth-child(3){animation-delay:4s;}
+
+/* ═══════════ GLOW BADGES ═══════════ */
+.live-badge{animation:glow120 3s ease-in-out infinite;}
+.status-badge.sb-active{animation:glow120 3s ease-in-out infinite;}
+
+/* ═══════════ CARD INNER GLOW ON HOVER ═══════════ */
+.case-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at var(--mouse-x,50%) var(--mouse-y,50%),rgba(196,19,26,.04) 0%,transparent 60%);opacity:0;transition:opacity .4s;pointer-events:none;}
+.case-card:hover::after{opacity:1;}
+
+/* ═══════════ EVIDENCE STAMP ANIMATION ═══════════ */
+.ev-stamp{transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;}
+.ev-stamp:hover{transform:rotate(-5deg) scale(1.08);box-shadow:0 4px 16px rgba(196,19,26,.15);}
+
+/* ═══════════ TIMELINE ENHANCED ═══════════ */
+.tl-dot{transition:background .2s,transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;}
+.tl-item:hover .tl-dot{transform:scale(1.4);box-shadow:0 0 12px rgba(196,19,26,.3);}
+.tl-yr{transition:transform .3s,text-shadow .3s;}
+.tl-item:hover .tl-yr{transform:translateX(4px);text-shadow:0 0 12px rgba(196,19,26,.3);}
+
+/* ═══════════ CORRUPTION METER PULSE ═══════════ */
+.cm-ring{transition:transform .3s;}.cm-ring:hover{transform:scale(1.05);}
+.cm-val{transition:text-shadow .3s;}.cm-ring:hover .cm-val{text-shadow:0 0 20px rgba(196,19,26,.4);}
+
+/* ═══════════ SCROLL-LINKED PARALLAX ═══════════ */
+.parallax-slow{transition:transform .1s linear;will-change:transform;}
+.parallax-fast{transition:transform .1s linear;will-change:transform;}
+
+/* ═══════════ ENHANCED LANG OVERLAY ═══════════ */
+#lang-overlay{background:radial-gradient(ellipse at center,rgba(19,18,16,.95),rgba(10,10,12,1));}
+.lo-brand{animation:entranceScale .8s cubic-bezier(.23,1,.32,1) both;}
+.lo-sub{animation:fadeSlide .6s ease .2s both;}
+.lo-prompt{animation:fadeSlide .6s ease .4s both;}
+.lo-btns{animation:fadeSlide .6s ease .6s both;}
+.lo-cases-preview{animation:fadeSlide .6s ease .8s both;}
+
+/* ═══════════ SEARCH OVERLAY ENHANCED ═══════════ */
+.search-overlay{backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);}
+.so-inner{box-shadow:0 24px 80px rgba(0,0,0,.3),0 0 0 1px rgba(196,19,26,.1);}
+.so-result{transition:background .15s,transform .2s,padding-left .2s;}
+.so-result:hover,.so-result.active{padding-left:28px;}
+
+/* ═══════════ MAGNETIC BUTTON ═══════════ */
+.magnetic-area{transition:transform .3s cubic-bezier(.23,1,.32,1);}
 </style>
 </head>
 <body>
+
+<!-- READING PROGRESS BAR -->
+<div id="read-progress"></div>
+
+<!-- PARTICLE BACKGROUND -->
+<canvas id="particles"></canvas>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="search-overlay">
+  <div class="so-inner">
+    <div class="so-input-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="so-input" id="search-input" type="text" placeholder="Search cases, names, amounts..." autocomplete="off">
+      <span class="so-hint">ESC</span>
+    </div>
+    <div class="so-results" id="search-results"></div>
+    <div class="so-footer">
+      <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+      <span><kbd>Enter</kbd> go to case</span>
+      <span><kbd>Esc</kbd> close</span>
+    </div>
+  </div>
+</div>
+
+<!-- SHARE TOAST -->
+<div class="share-toast" id="share-toast">Link copied to clipboard</div>
 
 <!-- ═══ LANGUAGE OVERLAY ═══ -->
 <div id="lang-overlay">
@@ -427,22 +786,43 @@ a{color:inherit;text-decoration:none;}
 <header class="masthead">
   <div class="mh-logo"><span class="dot"></span>Khulasa.press</div>
   <ul class="mh-nav">
-    <li><a href="#cases" class="en-t">Cases</a><a href="#cases" class="ne-t" style="display:none">मुद्दाहरू</a></li>
-    <li><a href="#proof" class="en-t">Proof Vault</a><a href="#proof" class="ne-t" style="display:none">प्रमाण</a></li>
-    <li><a href="#timeline">Timeline</a></li>
-    <li><a href="#data">Data</a></li>
-    <li><a href="#sources" class="en-t">Sources</a><a href="#sources" class="ne-t" style="display:none">स्रोत</a></li>
+    <li><a href="#cases" class="en-t"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>Cases</a><a href="#cases" class="ne-t" style="display:none"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>मुद्दाहरू</a></li>
+    <li><a href="#proof" class="en-t"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Proof Vault</a><a href="#proof" class="ne-t" style="display:none"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>प्रमाण</a></li>
+    <li><a href="#timeline"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Timeline</a></li>
+    <li><a href="#data"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Data</a></li>
+    <li><a href="#sources" class="en-t"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Sources</a><a href="#sources" class="ne-t" style="display:none"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>स्रोत</a></li>
   </ul>
   <div class="mh-right">
-    <button id="lang-toggle" onclick="toggleLang()">Switch Language</button>
+    <button id="search-btn" onclick="openSearch()" title="Search (Ctrl+K)" class="magnetic-area">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>Search</span>
+    </button>
+    <button id="dark-toggle" onclick="toggleDark()" title="Toggle dark mode (D)" class="magnetic-area">
+      <span class="moon">&#9790;</span>
+    </button>
+    <button class="share-btn magnetic-area" onclick="shareLink()"><svg style="width:12px;height:12px;display:inline;vertical-align:middle;margin-right:3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share</button>
+    <button id="lang-toggle" onclick="toggleLang()" class="magnetic-area"><svg style="width:12px;height:12px;display:inline;vertical-align:middle;margin-right:3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Switch Language</button>
     <div class="mh-date">March 2026</div>
   </div>
 </header>
 
+<!-- WAVE DIVIDER -->
+<div class="wave-divider">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+    <path class="wave-path" d="M0,50 C360,80 720,20 1080,50 C1260,65 1380,40 1440,50 L1440,80 L0,80 Z"/>
+  </svg>
+</div>
+
 <!-- HERO -->
 <section class="hero">
+  <!-- Liquid Blob Background -->
+  <div class="liquid-blob blob-1"></div>
+  <div class="liquid-blob blob-2"></div>
+  <div class="liquid-blob blob-3"></div>
+
   <div class="hero-eyebrow">
     <div class="ey-rule"></div>
+    <svg class="nav-icon" style="width:16px;height:16px;opacity:.7;stroke:var(--red)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
     <div class="ey-text en-t">Nepal Congress Accountability Record &mdash; Updated March 2026</div>
     <div class="ey-text ne-t" style="display:none">नेपाली कांग्रेस जवाफदेही अभिलेख &mdash; मार्च २०२६</div>
   </div>
@@ -472,26 +852,31 @@ a{color:inherit;text-decoration:none;}
         <div class="sp-head en-t">Live Case Registry &mdash; March 2026</div>
         <div class="sp-head ne-t" style="display:none">सक्रिय मुद्दा अभिलेख &mdash; मार्च २०२६</div>
         <div class="sp-cell">
+          <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="sp-n" data-count="6">0</span>
           <span class="sp-l en-t">Verified NC-linked cases<br>(CIAA + Court records)</span>
           <span class="sp-l ne-t" style="display:none">प्रमाणित NC–सम्बन्धित मुद्दाहरू<br>(CIAA + अदालती अभिलेख)</span>
         </div>
         <div class="sp-cell">
+          <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           <span class="sp-n" data-prefix="Rs." data-count="12" data-suffix="B+">Rs.0</span>
           <span class="sp-l en-t">Total estimated state losses<br>(all verified cases combined)</span>
           <span class="sp-l ne-t" style="display:none">कुल अनुमानित राज्य क्षति</span>
         </div>
         <div class="sp-cell">
+          <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           <span class="sp-n" data-count="875">0</span>
           <span class="sp-l en-t">Nepali citizens defrauded<br>(Bhutanese Refugee Scam)</span>
           <span class="sp-l ne-t" style="display:none">ठगिएका नागरिक (भुटानी शरणार्थी)</span>
         </div>
         <div class="sp-cell">
+          <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
           <span class="sp-n" data-count="55">0</span>
           <span class="sp-l en-t">Charged in single case<br>(Pokhara Airport, Dec 7 2025)</span>
           <span class="sp-l ne-t" style="display:none">एकै मुद्दामा अभियुक्त<br>(पोखरा विमानस्थल)</span>
         </div>
         <div class="sp-cell">
+          <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           <span class="sp-n" data-count="0">0</span>
           <span class="sp-l en-t">Senior NC leaders currently in prison<br>(as of March 2026)</span>
           <span class="sp-l ne-t" style="display:none">वरिष्ठ NC नेता कारागारमा<br>(मार्च २०२६)</span>
@@ -525,9 +910,10 @@ a{color:inherit;text-decoration:none;}
 
   <div class="sec-head fadein">
     <span class="sh-num">01</span><div class="sh-rule"></div>
+    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
     <h2 class="sh-title en-t">The Six Verified Cases — CIAA &amp; Court Records Only</h2>
     <h2 class="sh-title ne-t" style="display:none">छ प्रमाणित मुद्दाहरू — केवल CIAA र अदालती अभिलेख</h2>
-    <span class="sh-badge b-red">Verified</span>
+    <span class="sh-badge b-red"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Verified</span>
   </div>
 
   <!-- ──────────────────────────────────────────────────────────
@@ -902,9 +1288,10 @@ a{color:inherit;text-decoration:none;}
   <!-- ═════════ SECTION 2 — FURTHER VERIFIED ═════════ -->
   <div class="sec-head fadein">
     <span class="sh-num">02</span><div class="sh-rule"></div>
+    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
     <h2 class="sh-title en-t">Further Verified Cases &mdash; Court Verdicts &amp; Investigations</h2>
     <h2 class="sh-title ne-t" style="display:none">थप प्रमाणित मुद्दाहरू</h2>
-    <span class="sh-badge b-ink">Court Records</span>
+    <span class="sh-badge b-ink"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Court Records</span>
   </div>
 
   <div class="grid-2">
@@ -999,9 +1386,10 @@ a{color:inherit;text-decoration:none;}
   <!-- ═════════ PROOF VAULT ═════════ -->
   <div class="sec-head fadein" id="proof">
     <span class="sh-num">03</span><div class="sh-rule"></div>
+    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     <h2 class="sh-title en-t">Proof Vault — Every Claim Linked to Primary Source</h2>
     <h2 class="sh-title ne-t" style="display:none">प्रमाण भण्डार — हरेक दाबी प्राथमिक स्रोतसँग जोडिएको</h2>
-    <span class="sh-badge b-red">Open Sources</span>
+    <span class="sh-badge b-red"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Open Sources</span>
   </div>
 
   <div class="tl-wrap fadein">
@@ -1084,9 +1472,10 @@ a{color:inherit;text-decoration:none;}
   <!-- ═════════ TIMELINE ═════════ -->
   <div class="sec-head fadein" id="timeline">
     <span class="sh-num">04</span><div class="sh-rule"></div>
+    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     <h2 class="sh-title en-t">Timeline of Failure — 2009 to March 2026</h2>
     <h2 class="sh-title ne-t" style="display:none">विफलताको कालक्रम — २००९ देखि २०२६</h2>
-    <span class="sh-badge b-dark">Verified Chronology</span>
+    <span class="sh-badge b-dark"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Verified Chronology</span>
   </div>
 
   <div class="tl-wrap fadein">
@@ -1216,11 +1605,29 @@ a{color:inherit;text-decoration:none;}
 
 </div><!-- /content -->
 
+<!-- WAVE DIVIDER -->
+<div class="wave-divider">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+    <path class="wave-path" d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z"/>
+  </svg>
+</div>
+
 <!-- CPI DATA BAND -->
 <div class="data-band" id="data">
   <div class="db-inner">
     <div class="db-score">
-      <span class="db-num">34</span>
+      <div class="corruption-meter">
+        <div class="cm-ring" data-ring="34" data-color="gold">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle class="track" cx="80" cy="80" r="70"/>
+            <circle class="fill gold" cx="80" cy="80" r="70"/>
+          </svg>
+          <div class="cm-center">
+            <div class="cm-val" style="color:var(--gold)">34</div>
+            <div class="cm-label">CPI Score<br>out of 100</div>
+          </div>
+        </div>
+      </div>
       <span class="db-denom">/ 100</span>
       <span class="db-label en-t">Nepal CPI Score 2024<br>Transparency International<br>Rank: 107 / 180 Countries<br>CIAA Complaints FY23–24: 26,918</span>
       <span class="db-label ne-t" style="display:none">नेपाल CPI स्कोर २०२४<br>Rank: १०७ / १८० देश<br>CIAA उजुरी: २६,९१८</span>
@@ -1287,13 +1694,21 @@ a{color:inherit;text-decoration:none;}
   </div>
 </div>
 
+<!-- WAVE DIVIDER -->
+<div class="wave-divider" style="transform:rotate(180deg)">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+    <path class="wave-path" d="M0,50 C360,10 720,70 1080,30 C1260,15 1380,55 1440,40 L1440,80 L0,80 Z"/>
+  </svg>
+</div>
+
 <!-- SOURCES SECTION -->
 <div class="content" id="sources">
   <div class="sec-head fadein">
     <span class="sh-num">05</span><div class="sh-rule"></div>
+    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
     <h2 class="sh-title en-t">All Primary Sources — No Rumours, No Blogs, No Social Media</h2>
     <h2 class="sh-title ne-t" style="display:none">सबै प्राथमिक स्रोतहरू — कुनै अफवाह छैन</h2>
-    <span class="sh-badge b-red">Verified Only</span>
+    <span class="sh-badge b-red"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Verified Only</span>
   </div>
 
   <div class="grid-3 fadein">
@@ -1353,9 +1768,36 @@ a{color:inherit;text-decoration:none;}
   <div class="ft-note">March 2026 &nbsp;·&nbsp; 6 Verified Cases &nbsp;·&nbsp; Rs.12 Billion+ &nbsp;·&nbsp; All sources open and verified &nbsp;·&nbsp; No rumours, no speculation</div>
 </footer>
 
+<!-- FLOATING TOC -->
+<nav class="float-toc" id="float-toc">
+  <div class="ft-dot" data-label="Cases" data-target="#cases"></div>
+  <div class="ft-dot" data-label="Proof Vault" data-target="#proof"></div>
+  <div class="ft-dot" data-label="Timeline" data-target="#timeline"></div>
+  <div class="ft-dot" data-label="Data" data-target="#data"></div>
+  <div class="ft-dot" data-label="Sources" data-target="#sources"></div>
+</nav>
+
+<!-- BACK TO TOP -->
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top"><svg style="width:18px;height:18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></button>
+
+<!-- KEYBOARD HINTS -->
+<div class="kb-hint" id="kb-hint">
+  <span class="kb-key"><kbd>Ctrl</kbd>+<kbd>K</kbd> Search</span>
+  <span class="kb-key"><kbd>D</kbd> Dark</span>
+  <span class="kb-key"><kbd>T</kbd> Top</span>
+</div>
+
 </div><!-- /#site-wrap -->
 
+<!-- CURSOR TRAIL -->
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
 <script>
+/* ════════════════════════════════════════════════════
+   KHULASA.PRESS — ENHANCED ENGINE
+   ════════════════════════════════════════════════════ */
+
 /* ════ AUDIO ════ */
 const POOL_SIZE=6;let pool=[],poolIdx=0,poolReady=false;
 function initAudioPool(){if(poolReady)return;poolReady=true;for(let i=0;i<POOL_SIZE;i++){const a=new Audio('audio.mp3');a.preload='auto';a.volume=0.8;pool.push(a);}}
@@ -1364,11 +1806,16 @@ function playGoat(){try{initAudioPool();const s=pool[poolIdx%POOL_SIZE];poolIdx+
 /* ════ CLICK POP ════ */
 const POPS=['BAA!','BLEAT!','NAAA!','MEH!','BLAAA!','BAA BAA!','BLAAAAT!'];
 function spawnPop(x,y,dx,dy){const el=document.createElement('div');el.className='g-pop';el.textContent=POPS[Math.floor(Math.random()*POPS.length)];el.style.left=(x+(dx||0)-22)+'px';el.style.top=(y+(dy||0)-22)+'px';document.body.appendChild(el);setTimeout(()=>el.remove(),680);}
-document.addEventListener('click',e=>{playGoat();spawnPop(e.clientX,e.clientY);setTimeout(()=>spawnPop(e.clientX,e.clientY,(Math.random()-.5)*60,(Math.random()-.5)*40),80);setTimeout(()=>spawnPop(e.clientX,e.clientY,(Math.random()-.5)*80,(Math.random()-.5)*50),160);},true);
+document.addEventListener('click',e=>{
+  if(e.target.closest('.search-overlay,.so-inner,#search-btn,#dark-toggle,#back-top,.float-toc,.kb-hint'))return;
+  playGoat();spawnPop(e.clientX,e.clientY);
+  setTimeout(()=>spawnPop(e.clientX,e.clientY,(Math.random()-.5)*60,(Math.random()-.5)*40),80);
+  setTimeout(()=>spawnPop(e.clientX,e.clientY,(Math.random()-.5)*80,(Math.random()-.5)*50),160);
+},true);
 
 /* ════ LANGUAGE SYSTEM ════ */
 let currentLang='en';
-function chooseLang(lang){currentLang=lang;applyLang(lang);document.getElementById('lang-overlay').classList.add('hidden');document.getElementById('site-wrap').classList.add('visible');setTimeout(()=>playGoat(),300);setTimeout(()=>playGoat(),700);}
+function chooseLang(lang){currentLang=lang;applyLang(lang);document.getElementById('lang-overlay').classList.add('hidden');document.getElementById('site-wrap').classList.add('visible');setTimeout(()=>{playGoat();initParticles();},300);setTimeout(()=>playGoat(),700);}
 function applyLang(lang){
   document.getElementById('html-root').setAttribute('lang',lang);
   document.querySelectorAll('.en-t').forEach(el=>{el.style.display=lang==='en'?'':'none';});
@@ -1383,36 +1830,547 @@ function filterCases(category,btn){
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   document.querySelectorAll('.case-card,.sm-card').forEach(card=>{
-    if(category==='all'){card.classList.remove('hidden-filter');}
-    else{const cat=card.dataset.category||card.dataset.status||'';cat===category?card.classList.remove('hidden-filter'):card.classList.add('hidden-filter');}
+    if(category==='all'){card.classList.remove('hidden-filter');card.style.animation='fadeSlide .4s ease both';}
+    else{const cat=card.dataset.category||card.dataset.status||'';
+      if(cat===category){card.classList.remove('hidden-filter');card.style.animation='fadeSlide .4s ease both';}
+      else{card.classList.add('hidden-filter');}
+    }
   });
 }
 
-/* ════ COUNTER ANIMATION ════ */
-document.addEventListener('DOMContentLoaded',()=>{
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach(en=>{
-      if(!en.isIntersecting)return;
-      const el=en.target,target=parseInt(el.dataset.count)||0,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'',dur=1800,start=performance.now();
-      (function tick(now){const p=Math.min((now-start)/dur,1),ease=1-Math.pow(1-p,4);el.textContent=pre+Math.round(ease*target).toLocaleString()+suf;if(p<1)requestAnimationFrame(tick);})(start);
-      obs.unobserve(el);
+/* ════ DARK MODE ════ */
+let isDark=localStorage.getItem('khulasa-dark')==='1';
+function applyDark(){
+  document.documentElement.classList.toggle('dark',isDark);
+  const btn=document.getElementById('dark-toggle');
+  if(btn)btn.innerHTML=isDark?'<span class="sun">&#9788;</span>':'<span class="moon">&#9790;</span>';
+}
+function toggleDark(){isDark=!isDark;localStorage.setItem('khulasa-dark',isDark?'1':'0');applyDark();}
+applyDark();
+
+/* ════ READING PROGRESS BAR ════ */
+function updateProgress(){
+  const st=window.scrollY,docH=document.documentElement.scrollHeight-window.innerHeight;
+  const pct=docH>0?Math.min((st/docH)*100,100):0;
+  const bar=document.getElementById('read-progress');
+  if(bar)bar.style.width=pct+'%';
+}
+
+/* ════ BACK TO TOP + FLOATING TOC ════ */
+function updateScrollUI(){
+  const st=window.scrollY;
+  const backBtn=document.getElementById('back-top');
+  const toc=document.getElementById('float-toc');
+  const kb=document.getElementById('kb-hint');
+  if(backBtn)backBtn.classList.toggle('visible',st>500);
+  if(toc)toc.classList.toggle('visible',st>400);
+  if(kb)kb.classList.toggle('visible',st>400);
+
+  // Update active TOC dot
+  if(toc){
+    const dots=toc.querySelectorAll('.ft-dot');
+    let activeIdx=-1;
+    dots.forEach((dot,i)=>{
+      const target=document.querySelector(dot.dataset.target);
+      if(target&&target.getBoundingClientRect().top<=150)activeIdx=i;
     });
-  },{threshold:.5});
-  document.querySelectorAll('[data-count]').forEach(el=>obs.observe(el));
+    dots.forEach((d,i)=>d.classList.toggle('active',i===activeIdx));
+  }
+}
+
+/* ════ SCROLL LISTENER (THROTTLED) ════ */
+let ticking=false;
+window.addEventListener('scroll',()=>{
+  if(!ticking){requestAnimationFrame(()=>{updateProgress();updateScrollUI();ticking=false;});ticking=true;}
+},{passive:true});
+
+/* ════ FLOATING TOC CLICKS ════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.ft-dot').forEach(dot=>{
+    dot.addEventListener('click',()=>{
+      const target=document.querySelector(dot.dataset.target);
+      if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
 });
 
-/* ════ SCROLL FADE ════ */
+/* ════ SEARCH SYSTEM ════ */
+const SEARCH_DATA=[
+  {id:'case1',title:'Pokhara Airport Scandal',meta:'Rs.8.36B · 55 Accused · CIAA Dec 2025',text:'pokhara airport scandal ram sharan mahat nc finance minister camc engineering 8.36 billion 55 accused special court ciaa december 2025 china exim bank loan'},
+  {id:'case2',title:'Bhutanese Refugee Scam',meta:'Rs.288M · 875 Victims · NC Minister Khand',text:'bhutanese refugee scam balkrishna khand home minister arzoo rana deuba 875 victims 288 million treason fraud forgery organized crime bail'},
+  {id:'case3',title:'Teramocs Telecom Procurement',meta:'Rs.3.21B · NC MP Basnet Suspended',text:'teramocs telecom procurement mohan bahadur basnet nta nepal telecommunications authority 3.21 billion suspended parliament communications minister'},
+  {id:'case4',title:'Santosh Chalise Illegal Wealth',meta:'Rs.36.84M · NC MP · Finance Committee Chair',text:'santosh chalise gokarneshwar mayor mp kathmandu 36.84 million illegal wealth ciaa money laundering finance committee chair'},
+  {id:'proof',title:'Proof Vault — Source Links',meta:'OCCRP · Al Jazeera · Foreign Policy · Kathmandu Post',text:'proof vault occrp al jazeera foreign policy diplomat kathmandu post himalayan times fiscal nepal myrepublica khabarhub sources'},
+  {id:'timeline',title:'Timeline of Failure 2009–2026',meta:'Full Chronological Record',text:'timeline 2009 2014 2016 2021 2022 2023 2024 2025 2026 chronology lalita niwas mahat khand basnet chalise'},
+  {id:'data',title:'Corruption Data & CPI Score',meta:'34/100 · Rank 107/180 · 26,918 Complaints',text:'cpi corruption perception index transparency international 34 100 107 180 26918 complaints ciaa annual report financial losses'},
+  {id:'sources',title:'Primary Sources',meta:'International + Nepal Press + Official Records',text:'primary sources international nepal press official records occrp al jazeera foreign policy diplomat kathmandu post himalayan times'},
+];
+let searchActive=false,searchIdx=-1;
+function openSearch(){
+  searchActive=true;searchIdx=-1;
+  const ov=document.getElementById('search-overlay');ov.classList.add('open');
+  const inp=document.getElementById('search-input');inp.value='';inp.focus();
+  renderResults('');
+}
+function closeSearch(){
+  searchActive=false;
+  document.getElementById('search-overlay').classList.remove('open');
+}
+function renderResults(query){
+  const container=document.getElementById('search-results');
+  if(!query.trim()){container.innerHTML='<div class="so-empty">Start typing to search across all cases, names, and amounts...</div>';return;}
+  const q=query.toLowerCase();
+  const matches=SEARCH_DATA.filter(d=>d.title.toLowerCase().includes(q)||d.meta.toLowerCase().includes(q)||d.text.includes(q));
+  if(!matches.length){container.innerHTML='<div class="so-empty">No matches found for "'+query.replace(/</g,'&lt;')+'"</div>';return;}
+  container.innerHTML=matches.map((m,i)=>{
+    const matchText=m.text.split(' ').find(w=>w.includes(q))||'';
+    return `<a class="so-result${i===searchIdx?' active':''}" href="#${m.id}" data-idx="${i}" onclick="closeSearch()">
+      <div class="so-result-title">${highlight(m.title,query)}</div>
+      <div class="so-result-meta">${highlight(m.meta,query)}</div>
+      ${matchText?`<div class="so-result-match">${highlight(matchText,query)}</div>`:''}
+    </a>`;
+  }).join('');
+}
+function highlight(text,query){
+  if(!query.trim())return text;
+  const re=new RegExp('('+query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+  return text.replace(re,'<mark>$1</mark>');
+}
 document.addEventListener('DOMContentLoaded',()=>{
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach((en,i)=>{if(en.isIntersecting){setTimeout(()=>en.target.classList.add('visible'),(i%4)*55);obs.unobserve(en.target);}});
-  },{threshold:.07});
-  document.querySelectorAll('.fadein').forEach(el=>obs.observe(el));
+  const inp=document.getElementById('search-input');
+  if(inp)inp.addEventListener('input',()=>renderResults(inp.value));
+  document.getElementById('search-overlay').addEventListener('click',e=>{
+    if(e.target===document.getElementById('search-overlay'))closeSearch();
+  });
 });
+
+/* ════ SHARE ════ */
+function shareLink(){
+  const url=window.location.href;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(()=>showToast());
+  }else{
+    const ta=document.createElement('textarea');ta.value=url;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();showToast();
+  }
+}
+function showToast(){
+  const t=document.getElementById('share-toast');t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* ════ KEYBOARD SHORTCUTS ════ */
+document.addEventListener('keydown',e=>{
+  // Ctrl+K or Cmd+K = Search
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();if(searchActive)closeSearch();else openSearch();return;}
+  // Escape = close search
+  if(e.key==='Escape'&&searchActive){closeSearch();return;}
+  // Search navigation
+  if(searchActive){
+    const results=document.querySelectorAll('.so-result');
+    if(e.key==='ArrowDown'){e.preventDefault();searchIdx=Math.min(searchIdx+1,results.length-1);results.forEach((r,i)=>r.classList.toggle('active',i===searchIdx));if(results[searchIdx])results[searchIdx].scrollIntoView({block:'nearest'});}
+    if(e.key==='ArrowUp'){e.preventDefault();searchIdx=Math.max(searchIdx-1,0);results.forEach((r,i)=>r.classList.toggle('active',i===searchIdx));if(results[searchIdx])results[searchIdx].scrollIntoView({block:'nearest'});}
+    if(e.key==='Enter'&&results[searchIdx]){e.preventDefault();results[searchIdx].click();}
+    return;
+  }
+  // Don't trigger shortcuts when typing in inputs
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  // D = Dark mode
+  if(e.key==='d'||e.key==='D'){toggleDark();}
+  // T = Scroll to top
+  if(e.key==='t'||e.key==='T'){window.scrollTo({top:0,behavior:'smooth'});}
+  // J = Next section, K = Prev section
+  const anchors=['#cases','#proof','#timeline','#data','#sources'];
+  if(e.key==='j'||e.key==='J'){
+    e.preventDefault();
+    for(const a of anchors){const el=document.querySelector(a);if(el&&el.getBoundingClientRect().top>100){el.scrollIntoView({behavior:'smooth'});break;}}
+  }
+  if(e.key==='k'||e.key==='K'){
+    e.preventDefault();
+    for(let i=anchors.length-1;i>=0;i--){const el=document.querySelector(anchors[i]);if(el&&el.getBoundingClientRect().top<-50){el.scrollIntoView({behavior:'smooth'});break;}}
+  }
+});
+
+/* ════ COUNTER ANIMATION — handled by enhanced 120Hz version below ════ */
+
+/* ════ SCROLL FADE — handled by enhanced stagger reveal below ════ */
 
 /* ════ HOVER SOUNDS ════ */
 document.addEventListener('DOMContentLoaded',()=>{
-  ['.case-card','.sm-card','.sp-cell','.tl-item','.pullquote','.hero-h1','.db-num','.alert-band','.mh-logo','.stat-inline','.lo-btn'].join(',');
   document.querySelectorAll('.case-card,.sm-card,.sp-cell,.tl-item,.pullquote,.hero-h1,.db-num,.lo-btn').forEach(el=>{el.addEventListener('mouseenter',()=>playGoat());});
+});
+
+/* ════ CORRUPTION METER RINGS ════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  const ringObs=new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(!en.isIntersecting)return;
+      const ring=en.target;
+      const val=parseInt(ring.dataset.ring)||0;
+      const fill=ring.querySelector('.fill');
+      if(fill){
+        const circumference=2*Math.PI*70; // r=70
+        const offset=circumference-((val/100)*circumference);
+        fill.style.strokeDasharray=circumference;
+        fill.style.strokeDashoffset=offset;
+      }
+      ringObs.unobserve(ring);
+    });
+  },{threshold:.4});
+  document.querySelectorAll('.cm-ring').forEach(r=>ringObs.observe(r));
+});
+
+/* ════ PARTICLE NETWORK BACKGROUND ════ */
+let particlesInitialized=false;
+function initParticles(){
+  if(particlesInitialized)return;
+  particlesInitialized=true;
+  const canvas=document.getElementById('particles');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let w,h,particles=[];
+  const PARTICLE_COUNT=60;
+  const CONNECT_DIST=120;
+
+  function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+
+  class Particle{
+    constructor(){this.reset();}
+    reset(){this.x=Math.random()*w;this.y=Math.random()*h;this.vx=(Math.random()-.5)*.35;this.vy=(Math.random()-.5)*.35;this.r=Math.random()*1.5+.5;}
+    update(){
+      this.x+=this.vx;this.y+=this.vy;
+      if(this.x<0||this.x>w)this.vx*=-1;
+      if(this.y<0||this.y>h)this.vy*=-1;
+    }
+  }
+  for(let i=0;i<PARTICLE_COUNT;i++)particles.push(new Particle());
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    const isDarkMode=document.documentElement.classList.contains('dark');
+    const dotColor=isDarkMode?'rgba(196,19,26,.4)':'rgba(196,19,26,.25)';
+    const lineColor=isDarkMode?'rgba(196,19,26,.08)':'rgba(196,19,26,.06)';
+
+    for(let i=0;i<particles.length;i++){
+      particles[i].update();
+      ctx.beginPath();ctx.arc(particles[i].x,particles[i].y,particles[i].r,0,Math.PI*2);
+      ctx.fillStyle=dotColor;ctx.fill();
+
+      for(let j=i+1;j<particles.length;j++){
+        const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<CONNECT_DIST){
+          ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle=lineColor;ctx.lineWidth=.5;ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ════ TYPEWRITER EFFECT ON HERO ════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  const heroH1=document.querySelector('.hero-h1.en-t');
+  if(heroH1){
+    heroH1.setAttribute('data-text',heroH1.textContent);
+  }
+});
+
+/* ════ INIT ON LOAD ════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  updateProgress();
+  updateScrollUI();
+  // If lang overlay was already dismissed
+  if(document.getElementById('site-wrap').classList.contains('visible')){
+    initParticles();
+  }
+});
+
+/* ════════════════════════════════════════════════════
+   ADVANCED 120Hz INTERACTIONS ENGINE
+   ════════════════════════════════════════════════════ */
+
+/* ════ CUSTOM CURSOR TRAIL ════ */
+(function(){
+  const dot=document.getElementById('cursor-dot');
+  const ring=document.getElementById('cursor-ring');
+  if(!dot||!ring)return;
+  let mx=0,my=0,dx=0,dy=0,rx=0,ry=0;
+  const hoverTargets='a,button,.case-card,.sm-card,.filter-btn,.lo-btn,.proof-link,.cc-src-btn,.tl-item,.sp-cell';
+  
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;},{passive:true});
+  
+  document.addEventListener('mouseover',e=>{
+    if(e.target.closest(hoverTargets)){dot.classList.add('hovering');ring.classList.add('hovering');}
+  });
+  document.addEventListener('mouseout',e=>{
+    if(e.target.closest(hoverTargets)){dot.classList.remove('hovering');ring.classList.remove('hovering');}
+  });
+  
+  function cursorLoop(){
+    dx+=(mx-dx)*.2;dy+=(my-dy)*.2;
+    rx+=(mx-rx)*.08;ry+=(my-ry)*.08;
+    dot.style.transform=`translate3d(${dx}px,${dy}px,0) translate(-50%,-50%)`;
+    ring.style.transform=`translate3d(${rx}px,${ry}px,0) translate(-50%,-50%)`;
+    requestAnimationFrame(cursorLoop);
+  }
+  cursorLoop();
+})();
+
+/* ════ CARD 3D TILT EFFECT ════ */
+(function(){
+  const cards=document.querySelectorAll('.case-card,.sm-card');
+  cards.forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const rect=card.getBoundingClientRect();
+      const x=(e.clientX-rect.left)/rect.width;
+      const y=(e.clientY-rect.top)/rect.height;
+      const tiltX=(y-.5)*-6;
+      const tiltY=(x-.5)*6;
+      card.style.transform=`perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-2px)`;
+      card.style.setProperty('--mouse-x',x*100+'%');
+      card.style.setProperty('--mouse-y',y*100+'%');
+    });
+    card.addEventListener('mouseleave',()=>{
+      card.style.transform='perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0)';
+    });
+  });
+})();
+
+/* ════ MAGNETIC BUTTON EFFECT ════ */
+(function(){
+  const btns=document.querySelectorAll('.magnetic-area');
+  btns.forEach(btn=>{
+    btn.addEventListener('mousemove',e=>{
+      const rect=btn.getBoundingClientRect();
+      const x=e.clientX-rect.left-rect.width/2;
+      const y=e.clientY-rect.top-rect.height/2;
+      btn.style.transform=`translate(${x*.25}px,${y*.25}px)`;
+    });
+    btn.addEventListener('mouseleave',()=>{
+      btn.style.transform='translate(0,0)';
+    });
+  });
+})();
+
+/* ════ RIPPLE EFFECT ON BUTTONS ════ */
+(function(){
+  document.querySelectorAll('.filter-btn,.lo-btn,.share-btn,#dark-toggle,#lang-toggle,#search-btn').forEach(btn=>{
+    btn.addEventListener('click',function(e){
+      const rect=this.getBoundingClientRect();
+      const ripple=document.createElement('span');
+      ripple.className='ripple-effect';
+      const size=Math.max(rect.width,rect.height);
+      ripple.style.width=ripple.style.height=size+'px';
+      ripple.style.left=(e.clientX-rect.left-size/2)+'px';
+      ripple.style.top=(e.clientY-rect.top-size/2)+'px';
+      this.appendChild(ripple);
+      setTimeout(()=>ripple.remove(),600);
+    });
+  });
+})();
+
+/* ════ ENHANCED PARTICLE SYSTEM (120Hz) ════ */
+// Override the original particle system with a more advanced one
+particlesInitialized=false;
+function initParticles(){
+  if(particlesInitialized)return;
+  particlesInitialized=true;
+  const canvas=document.getElementById('particles');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let w,h,particles=[],mouseX=0,mouseY=0;
+  const PARTICLE_COUNT=80;
+  const CONNECT_DIST=140;
+  const MOUSE_RADIUS=180;
+
+  function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+  
+  document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;},{passive:true});
+
+  class Particle{
+    constructor(){this.reset();}
+    reset(){
+      this.x=Math.random()*w;this.y=Math.random()*h;
+      this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4;
+      this.r=Math.random()*2+.5;
+      this.baseR=this.r;
+      this.pulse=Math.random()*Math.PI*2;
+    }
+    update(){
+      this.pulse+=.03;
+      this.r=this.baseR+Math.sin(this.pulse)*.5;
+      
+      // Mouse repulsion
+      const dx=this.x-mouseX,dy=this.y-mouseY;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<MOUSE_RADIUS&&dist>0){
+        const force=(MOUSE_RADIUS-dist)/MOUSE_RADIUS*.8;
+        this.vx+=dx/dist*force*.3;
+        this.vy+=dy/dist*force*.3;
+      }
+      
+      // Damping
+      this.vx*=.98;this.vy*=.98;
+      // Speed limit
+      const speed=Math.sqrt(this.vx*this.vx+this.vy*this.vy);
+      if(speed>2){this.vx*=2/speed;this.vy*=2/speed;}
+      
+      this.x+=this.vx;this.y+=this.vy;
+      if(this.x<0){this.x=0;this.vx*=-1;}
+      if(this.x>w){this.x=w;this.vx*=-1;}
+      if(this.y<0){this.y=0;this.vy*=-1;}
+      if(this.y>h){this.y=h;this.vy*=-1;}
+    }
+  }
+  for(let i=0;i<PARTICLE_COUNT;i++)particles.push(new Particle());
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    const isDarkMode=document.documentElement.classList.contains('dark');
+    
+    for(let i=0;i<particles.length;i++){
+      particles[i].update();
+      const p=particles[i];
+      
+      // Glow dot
+      const grad=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*3);
+      if(isDarkMode){
+        grad.addColorStop(0,'rgba(255,59,59,.5)');
+        grad.addColorStop(.5,'rgba(255,59,59,.15)');
+        grad.addColorStop(1,'transparent');
+      }else{
+        grad.addColorStop(0,'rgba(196,19,26,.4)');
+        grad.addColorStop(.5,'rgba(196,19,26,.1)');
+        grad.addColorStop(1,'transparent');
+      }
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r*3,0,Math.PI*2);
+      ctx.fillStyle=grad;ctx.fill();
+      
+      // Core dot
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=isDarkMode?'rgba(255,59,59,.6)':'rgba(196,19,26,.35)';
+      ctx.fill();
+
+      // Connect lines with gradient
+      for(let j=i+1;j<particles.length;j++){
+        const dx=p.x-particles[j].x,dy=p.y-particles[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<CONNECT_DIST){
+          const alpha=(1-dist/CONNECT_DIST)*(isDarkMode?.12:.08);
+          ctx.beginPath();
+          ctx.moveTo(p.x,p.y);ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle=isDarkMode?`rgba(255,59,59,${alpha})`:`rgba(196,19,26,${alpha})`;
+          ctx.lineWidth=.7;ctx.stroke();
+        }
+      }
+      
+      // Mouse connection lines
+      const md=Math.sqrt((p.x-mouseX)**2+(p.y-mouseY)**2);
+      if(md<MOUSE_RADIUS){
+        const alpha=(1-md/MOUSE_RADIUS)*(isDarkMode?.25:.15);
+        ctx.beginPath();
+        ctx.moveTo(p.x,p.y);ctx.lineTo(mouseX,mouseY);
+        ctx.strokeStyle=isDarkMode?`rgba(212,160,0,${alpha})`:`rgba(138,94,0,${alpha})`;
+        ctx.lineWidth=.5;ctx.stroke();
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ════ SMOOTH SCROLL PARALLAX (120Hz) ════ */
+(function(){
+  let scrollY=0;
+  function parallaxTick(){
+    scrollY=window.scrollY;
+    const blobs=document.querySelectorAll('.liquid-blob');
+    blobs.forEach((blob,i)=>{
+      const speed=[.03,.02,.04][i]||.03;
+      blob.style.transform=`translateY(${scrollY*speed}px)`;
+    });
+    requestAnimationFrame(parallaxTick);
+  }
+  parallaxTick();
+})();
+
+/* ════ STAGGERED SCROLL REVEAL (SPRING PHYSICS) ════ */
+(function(){
+  const revealObs=new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(!en.isIntersecting)return;
+      const el=en.target;
+      const stagger=Array.from(el.parentNode.children).indexOf(el)*60;
+      setTimeout(()=>{
+        el.classList.add('visible');
+        el.style.animation='entranceScale .5s cubic-bezier(.23,1,.32,1) both';
+      },stagger);
+      revealObs.unobserve(el);
+    });
+  },{threshold:.05});
+  document.querySelectorAll('.fadein').forEach(el=>revealObs.observe(el));
+})();
+
+/* ════ SMOOTH NUMBER COUNTER (120Hz EASING) ════ */
+(function(){
+  const countObs=new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(!en.isIntersecting||en.target.dataset.counted)return;
+      en.target.dataset.counted='1';
+      const el=en.target;
+      const target=parseInt(el.dataset.count)||0;
+      const pre=el.dataset.prefix||'';
+      const suf=el.dataset.suffix||'';
+      const dur=2200;
+      const start=performance.now();
+      (function tick(now){
+        const p=Math.min((now-start)/dur,1);
+        // Spring-like ease-out
+        const ease=1-Math.pow(1-p,4);
+        el.textContent=pre+Math.round(ease*target).toLocaleString()+suf;
+        if(p<1)requestAnimationFrame(tick);
+      })(start);
+      countObs.unobserve(el);
+    });
+  },{threshold:.5});
+  document.querySelectorAll('[data-count]').forEach(el=>countObs.observe(el));
+})();
+
+/* ════ EVIDENCE STAMP HOVER SOUND ════ */
+document.querySelectorAll('.ev-stamp,.cc-tag,.sh-badge,.status-badge').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    el.style.animation='bounceIn .3s cubic-bezier(.34,1.56,.64,1)';
+    setTimeout(()=>el.style.animation='',300);
+  });
+});
+
+/* ════ HERO TITLE PARALLAX ON MOUSE ════ */
+(function(){
+  const hero=document.querySelector('.hero');
+  const h1=document.querySelector('.hero-h1.en-t');
+  if(!hero||!h1)return;
+  hero.addEventListener('mousemove',e=>{
+    const rect=hero.getBoundingClientRect();
+    const x=(e.clientX-rect.left)/rect.width-.5;
+    const y=(e.clientY-rect.top)/rect.height-.5;
+    h1.style.transform=`translate(${x*12}px,${y*8}px)`;
+  });
+  hero.addEventListener('mouseleave',()=>{h1.style.transform='translate(0,0)';});
+})();
+
+/* ════ FLOATING TOC ENHANCED ════ */
+document.querySelectorAll('.ft-dot').forEach(dot=>{
+  dot.addEventListener('mouseenter',function(){
+    this.style.animation='bounceIn .3s cubic-bezier(.34,1.56,.64,1)';
+    setTimeout(()=>this.style.animation='',300);
+  });
 });
 </script>
 </body>
